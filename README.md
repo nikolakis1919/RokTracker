@@ -34,11 +34,11 @@ Any bugs that you may find or any suggestions you may have, please feel free to 
 If you like what i created, you can always support me. https://www.buymeacoffee.com/nikolakis1919
 
 # Usage
-Options Screen. Here you can select the amount of players you want to scan and your kingdom. 
+Options Screen. Here you can select the amount of players you want to scan and your kingdom. \
 ![image](https://user-images.githubusercontent.com/96141261/146093510-da993c83-221f-4310-8d69-2d920b7ea66b.png)
-Single result in cmd.
+Single result in cmd.\
 ![image](https://user-images.githubusercontent.com/96141261/146094135-9b869feb-722b-43cb-8623-f2cbfc7d0052.png)
-Results in excel file.
+Results in excel file.\
 ![screen-01 19 42 15 12 2021](https://user-images.githubusercontent.com/96141261/146095176-96dcacb2-9c3e-48c7-8b8f-ac2e91973901.png)
 
 
