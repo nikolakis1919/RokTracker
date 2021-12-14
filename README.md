@@ -19,15 +19,16 @@ Everything should be like this and no more emulators should be running concurren
 # Important Notes
 1. Every requirement that tracker needs in order to run, will be installed automatically, by running the .bat file.
 2. You must run the .bat file as an administrator.
-3. Platform tools folder should be extracted as a folder inside the Tracker's folder. Like the following image
+3. Change the installation path of Tesseract in .py file if your path is different. Open this file with your notepad and change the path to yours at 18th line of code. My path is C:\Program Files\Tesseract-OCR\tesseract.exe
+4. Platform tools folder should be extracted as a folder inside the Tracker's folder. Like the following image
 ![image](https://user-images.githubusercontent.com/96141261/146061510-8c39bc59-f8d2-4644-b005-3ce43d29a6cb.png)
-4. In order to get only your kingdoms ranks, the character that is currently logged in game must be in HOME KINGDOM, else you will get all the players in your KvK including players from different kingdoms.
-5. The view before running the programme should be at the top of power rankings or at the top of kill points rankings. No move should be made in this window until scanning is done.
-6. Account must be lower in ranks than the amount of players you want to scan. e.g. Cannot scan top 100 when character's rank is 85. Use a farm account instead.
-7. You can see the programme's progress at CMD when it is running.
-8. Chinese letters are not shown properly in CMD but they are visible in the final .xls file.
-9. Bluestacks settings must be the same in above pictures.
-10. You can do whatever you want in your computer when programme is scanning.
+5. In order to get only your kingdoms ranks, the character that is currently logged in game must be in HOME KINGDOM, else you will get all the players in your KvK including players from different kingdoms.
+6. The view before running the programme should be at the top of power rankings or at the top of kill points rankings. No move should be made in this window until scanning is done.
+7. Account must be lower in ranks than the amount of players you want to scan. e.g. Cannot scan top 100 when character's rank is 85. Use a farm account instead.
+8. You can see the programme's progress at CMD when it is running.
+9. Chinese letters are not shown properly in CMD but they are visible in the final .xls file.
+10. Bluestacks settings must be the same in above pictures.
+11. You can do whatever you want in your computer when programme is scanning.
 
 # Contact and Support
 Any bugs that you may find or any suggestions you may have, please feel free to contact me in my discord: nikos#4469\
