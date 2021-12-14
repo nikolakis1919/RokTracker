@@ -30,5 +30,15 @@ Everything should be like this and no more emulators should be running concurren
 10. You can do whatever you want in your computer when programme is scanning.
 
 # Contact and Support
-Any bugs that you may find, please feel free to contact me in my discord: nikos#4469
+Any bugs that you may find or any suggestions you may have, please feel free to contact me in my discord: nikos#4469\
 If you like what i created, you can always support me. https://www.buymeacoffee.com/nikolakis1919
+
+# Usage
+Options Screen. Here you can select the amount of players you want to scan and your kingdom. 
+![image](https://user-images.githubusercontent.com/96141261/146093510-da993c83-221f-4310-8d69-2d920b7ea66b.png)
+Single result in cmd.
+![image](https://user-images.githubusercontent.com/96141261/146094135-9b869feb-722b-43cb-8623-f2cbfc7d0052.png)
+Results in excel file.
+
+
+
