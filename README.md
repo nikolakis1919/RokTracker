@@ -28,3 +28,7 @@ Everything should be like this and no more emulators should be running concurren
 8. Chinese letters are not shown properly in CMD but they are visible in the final .xls file.
 9. Bluestacks settings must be the same in above pictures.
 10. You can do whatever you want in your computer when programme is scanning.
+
+# Contact and Support
+Any bugs that you may find, please feel free to contact me in my discord: nikos#4469
+If you like what i created, you can always support me. https://www.buymeacoffee.com/nikolakis1919
