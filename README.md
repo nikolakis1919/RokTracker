@@ -2,11 +2,11 @@
 Open Source Rise of Kingdoms Stats Management Tool. Track TOP (50-975) Players in Power/KillPoints. Creates a .xls file with in-game Id, Power, Kill Points, T1/T2/T3/T4/T5 Kills, Dead troops, RSS Assistance.
 
 # Required
-1. Bluestacks 5
+1. Bluestacks 5 Installation
 https://cdn3.bluestacks.com/downloads/windows/nxt/5.4.100.1026/0129e8eb74f84fc396a1500329365a09/BlueStacksMicroInstaller_5.4.100.1026_native.exe?filename=BlueStacksMicroInstaller_5.4.100.1026_native_5ffb0694218e1b99e7000bed6dcbe547_0.exe
-2. Python 3.6.8 https://www.python.org/ftp/python/3.6.8/python-3.6.8-amd64.exe
-3. Tesseract-OCR https://digi.bib.uni-mannheim.de/tesseract/tesseract-ocr-w64-setup-v5.0.0.20211201.exe
-4. Adb Platform Tools https://dl.google.com/android/repository/platform-tools_r31.0.3-windows.zip
+2. Python 3.6.8 Installation https://www.python.org/ftp/python/3.6.8/python-3.6.8-amd64.exe
+3. Tesseract-OCR Installation https://digi.bib.uni-mannheim.de/tesseract/tesseract-ocr-w64-setup-v5.0.0.20211201.exe
+4. Adb Platform Tools Download and Extract(See Important Notes) https://dl.google.com/android/repository/platform-tools_r31.0.3-windows.zip
 5. Windows 10-Tested, Windows 7 or Windows 11 could be fine.
 
 # Bluestacks 5 Settings
@@ -39,6 +39,7 @@ Options Screen. Here you can select the amount of players you want to scan and y
 Single result in cmd.
 ![image](https://user-images.githubusercontent.com/96141261/146094135-9b869feb-722b-43cb-8623-f2cbfc7d0052.png)
 Results in excel file.
+![screen-01 19 42 15 12 2021](https://user-images.githubusercontent.com/96141261/146095176-96dcacb2-9c3e-48c7-8b8f-ac2e91973901.png)
 
 
 
