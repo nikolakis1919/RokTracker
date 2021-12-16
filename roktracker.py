@@ -144,14 +144,15 @@ for i in range(search_range):
 	with open(('gov_info.png'), 'wb') as f:
 				f.write(image)
 	image = cv2.imread('gov_info.png')
-	
 	#Power and Killpoints
 	roi = (642, 230, 244, 38)
 	im_gov_id = image[int(roi[1]):int(roi[1]+roi[3]), int(roi[0]):int(roi[0]+roi[2])]
+	image = cv2.imread('gov_info.png',cv2.IMREAD_GRAYSCALE)
 	roi = (890, 364, 170, 44)
 	im_gov_power = image[int(roi[1]):int(roi[1]+roi[3]), int(roi[0]):int(roi[0]+roi[2])]
 	roi = (1114, 364, 222, 44)
 	im_gov_killpoints = image[int(roi[1]):int(roi[1]+roi[3]), int(roi[0]):int(roi[0]+roi[2])]
+	gov_name = tk.Tk().clipboard_get()
 	
 	#kills tier
 	device.shell(f'input tap 1118 350')	
@@ -159,7 +160,7 @@ for i in range(search_range):
 	image = device.screencap()
 	with open(('kills_tier.png'), 'wb') as f:
 				f.write(image)
-	image2 = cv2.imread('kills_tier.png')
+	image2 = cv2.imread('kills_tier.png',cv2.IMREAD_GRAYSCALE)
 	roi = (867, 591, 215, 28) #tier 1
 	im_kills_tier1 = image2[int(roi[1]):int(roi[1]+roi[3]), int(roi[0]):int(roi[0]+roi[2])]
 
@@ -181,7 +182,9 @@ for i in range(search_range):
 	image = device.screencap()
 	with open(('more_info.png'), 'wb') as f:
 				f.write(image)
-	image3 = cv2.imread('more_info.png')
+	image3 = cv2.imread('more_info.png',cv2.IMREAD_GRAYSCALE)
+	thresh = 127
+	image3 = cv2.threshold(image3, thresh, 255, cv2.THRESH_BINARY)[1]
 	roi = (1130, 443, 183, 40) #dead
 	im_dead = image3[int(roi[1]):int(roi[1]+roi[3]), int(roi[0]):int(roi[0]+roi[2])]
 	roi = (1130, 668, 183, 40) #rss assistance
@@ -189,7 +192,6 @@ for i in range(search_range):
 
 	#1st image data
 	gov_id = pytesseract.image_to_string(im_gov_id,config="-c tessedit_char_whitelist=0123456789,")
-	gov_name = tk.Tk().clipboard_get()
 	gov_power = pytesseract.image_to_string(im_gov_power,config="-c tessedit_char_whitelist=0123456789,")
 	gov_killpoints = pytesseract.image_to_string(im_gov_killpoints,config="-c tessedit_char_whitelist=0123456789,")
 	
