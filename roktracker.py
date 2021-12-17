@@ -135,7 +135,7 @@ if resume_scanning:
 stop = False
 def onkeypress(event):
 	global stop
-	if event.name == 'right ctrl':
+	if event.name == '\\':
 		print("Your scan will be terminated when current governor scan is over!")
 		stop = True
 
