@@ -31,7 +31,7 @@ Everything should be like this and no more emulators should be running concurren
 11. You can do whatever you want in your computer when tool is scanning.
 12. Resume Scan option starts scanning the middle governor that is displayed in screen. The 4th in order. So before starting the tool make sure that you are in the correct view in bluestacks.
 13. BE CAREFUL to always copy the .xls file from the RokTracker folder when it is created, because in the next capture, there is a chance to overwrite.
-14. V2.0 New Added Feature. With Right Ctrl button you can terminate the scan, saving current progress to .xls file. It will scan the current scanning governor and it won't continue to the next. Appropriate messages will appear in CMD.
+14. V2.0 New Added Feature. With \ button you can terminate the scan, saving current progress to .xls file. It will scan the current scanning governor and it won't continue to the next. Appropriate messages will appear in CMD.
 
 # Contact and Support
 Any bugs that you may find or any suggestions you may have, please feel free to contact me in my discord: nikos#4469\
