@@ -159,6 +159,7 @@ for i in range(j,search_range):
 	gov_rss_assistance = 0
 	#Open governor
 	device.shell(f'input tap 690 ' + str(Y[k]))
+	device.shell(f'input tap 690 ' + str(Y[k]))
 	time.sleep(3)
 	
 	#nickname copy
@@ -218,6 +219,9 @@ for i in range(j,search_range):
 	thresh = 127
 	image3 = cv2.threshold(image3, thresh, 255, cv2.THRESH_BINARY)[1]
 	im_dead2 = image3[int(roi[1]):int(roi[1]+roi[3]), int(roi[0]):int(roi[0]+roi[2])]
+	roi = (1130, 668, 183, 40) #rss assistance
+	im_rss_assistance2 = image3[int(roi[1]):int(roi[1]+roi[3]), int(roi[0]):int(roi[0]+roi[2])]
+	
 	#1st image data
 	gov_id = pytesseract.image_to_string(im_gov_id,config="-c tessedit_char_whitelist=0123456789,")
 	gov_power = pytesseract.image_to_string(im_gov_power,config="-c tessedit_char_whitelist=0123456789,")
@@ -234,6 +238,7 @@ for i in range(j,search_range):
 	gov_dead = pytesseract.image_to_string(im_dead,config="-c tessedit_char_whitelist=0123456789,")
 	gov_dead2 = pytesseract.image_to_string(im_dead2,config="-c tessedit_char_whitelist=0123456789,")
 	gov_rss_assistance = pytesseract.image_to_string(im_rss_assistance,config="-c tessedit_char_whitelist=0123456789,")
+	gov_rss_assistance2 = pytesseract.image_to_string(im_rss_assistance2,config="-c tessedit_char_whitelist=0123456789,")
 
 	#Just to check the progress, printing in cmd the result for each governor
 	if gov_dead == '' :
@@ -252,13 +257,18 @@ for i in range(j,search_range):
 	if gov_kills_tier5 == '' :
 		gov_kills_tier5 = '0\n'
 	if gov_rss_assistance == '' :
-		gov_rss_assistance = '0\n'
+		if gov_rss_assistance2 =='':
+			gov_rss_assistance = '0\n'
+		else:
+			gov_rss_assistance= gov_rss_assistance2
+
 	print('Governor ID: ' + gov_id + 'Governor Name: ' + gov_name + '\nGovernor Power: ' + gov_power + 'Governor Killpoints: ' + gov_killpoints + 'Tier 1 kills: ' + gov_kills_tier1 + 'Tier 2 kills: ' + gov_kills_tier2 + 'Tier 3 kills: ' + gov_kills_tier3 + 'Tier 4 kills: ' +  gov_kills_tier4 + 'Tier 5 kills: ' + gov_kills_tier5 + 'Governor Dead Troops: ' + gov_dead + 'Governor RSS Assistance: ' + gov_rss_assistance)
 	  
 	device.shell(f'input tap 1396 58') #close more info
 	time.sleep(0.5)
 	device.shell(f'input tap 1365 104') #close governor info
-	
+	time.sleep(1)
+
 	#Write results in excel file
 	sheet1.write(i+1-j, 0, gov_name)
 	sheet1.write(i+1-j, 1, gov_id)
