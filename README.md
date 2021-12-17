@@ -29,6 +29,9 @@ Everything should be like this and no more emulators should be running concurren
 9. Chinese letters are not shown properly in CMD but they are visible in the final .xls file.
 10. Bluestacks settings must be the same as in pictures above.
 11. You can do whatever you want in your computer when tool is scanning.
+12. Resume Scan option starts scanning the middle governor that is displayed in screen. The 4th in order. So before starting the tool make sure that you are in the correct view in bluestacks.
+13. BE CAREFUL to always copy the .xls file from the RokTracker folder when it is created, because in the next capture, there is a chance to overwrite.
+14. V2.0 New Added Feature. With Right Ctrl button you can terminate the scan, saving current progress to .xls file. It will scan the current scanning governor and it won't continue to the next. Appropriate messages will appear in CMD.
 
 # Contact and Support
 Any bugs that you may find or any suggestions you may have, please feel free to contact me in my discord: nikos#4469\
@@ -36,7 +39,8 @@ If you like what i created, you can always support me. https://www.buymeacoffee.
 
 # Usage
 Options Screen. Here you can select the amount of players you want to scan and your kingdom. \
-![image](https://user-images.githubusercontent.com/96141261/146093510-da993c83-221f-4310-8d69-2d920b7ea66b.png)
+Added option in v2.0 to resume Scan. The results will be saved in new file. You can merge manually if you wish.\
+![image](https://user-images.githubusercontent.com/96141261/146555364-d55cc627-cbf9-45de-8962-ec05e03ad009.png)
 
 
 Single result in cmd.\
@@ -45,6 +49,9 @@ Single result in cmd.\
 
 Results in excel file.\
 ![screen-01 19 42 15 12 2021](https://user-images.githubusercontent.com/96141261/146095176-96dcacb2-9c3e-48c7-8b8f-ac2e91973901.png)
+
+
+
 
 
 
