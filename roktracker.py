@@ -11,6 +11,7 @@ import xlwt
 from xlwt import Workbook
 from datetime import date
 import tkinter as tk
+import keyboard
 
 #Initiliaze paths and variables
 today = date.today()
@@ -44,10 +45,11 @@ variable = tk.StringVar(root)
 variable.set('')
 variable2 = tk.IntVar(root)
 variable2.set(OPTIONS[0]) # default value
+var1 = tk.IntVar()
 
 #Labels
 kingdom_label = tk.Label(root, text = 'Kingdom', font=('calibre',10, 'bold'))  
-search_top_label = tk.Label(root, text = 'Search Top', font=('calibre',10, 'bold'))
+search_top_label = tk.Label(root, text = 'Search Amount', font=('calibre',10, 'bold'))
 #Copyrights
 copyright=u"\u00A9"
 l1=tk.Label(root,text=copyright + ' nikolakis1919', font = ('calibre',10,'bold')) 
@@ -55,6 +57,7 @@ l1=tk.Label(root,text=copyright + ' nikolakis1919', font = ('calibre',10,'bold')
 #Input Fields
 kingdom_entry = tk.Entry(root,textvariable = variable, font=('calibre',10,'normal'))
 w = tk.OptionMenu(root, variable2, *OPTIONS)
+resume_scan =tk.Checkbutton(root, text="Resume Scan", variable=var1, font=('calibre',10,'bold'))
 
 def search():
 	if variable.get():
@@ -63,6 +66,8 @@ def search():
 		global search_range
 		search_range = variable2.get()
 		root.destroy()
+		global resume_scanning
+		resume_scanning = var1.get()
 		print("Scanning Started...")
 	else:
 		print("You need to fill Kingdom number!")
@@ -75,8 +80,9 @@ kingdom_label.grid(row=0,column=0)
 kingdom_entry.grid(row=0,column=1)
 search_top_label.grid(row=1,column=0)
 w.grid(row=1,column=1)
-button.grid(row=2,column=1,pady=5)
-l1.grid(row=3,column=1,pady=10)
+resume_scan.grid(row=2,column=1,pady=4)
+button.grid(row=3,column=1,pady=5)
+l1.grid(row=4,column=1,pady=10)
 
 root.mainloop()
 
@@ -118,9 +124,27 @@ sheet1.write(0, 10,'Rss Assistance', style)
 #Position for next governor to check
 Y =[285, 390, 490, 590, 605]
 
+#Resume Scan options. Refine the loop
+j = 0
+if resume_scanning:
+	j = 4
+	search_range = search_range + j
 #The loop in TOP XXX Governors in kingdom - It works both for power and killpoints Rankings
 #MUST have the tab opened to the 1st governor(Power or Killpoints)
-for i in range(search_range):
+
+stop = False
+def onkeypress(event):
+	global stop
+	if event.name == 'right ctrl':
+		print("Your scan will be terminated when current governor scan is over!")
+		stop = True
+
+keyboard.on_press(onkeypress)
+
+for i in range(j,search_range):
+	if stop:
+		print("Scan Terminated! Saving the current progress...")
+		break
 	if i>4:
 		k = 4
 	else:
@@ -183,13 +207,17 @@ for i in range(search_range):
 	with open(('more_info.png'), 'wb') as f:
 				f.write(image)
 	image3 = cv2.imread('more_info.png',cv2.IMREAD_GRAYSCALE)
-	thresh = 127
-	image3 = cv2.threshold(image3, thresh, 255, cv2.THRESH_BINARY)[1]
+
 	roi = (1130, 443, 183, 40) #dead
 	im_dead = image3[int(roi[1]):int(roi[1]+roi[3]), int(roi[0]):int(roi[0]+roi[2])]
 	roi = (1130, 668, 183, 40) #rss assistance
 	im_rss_assistance = image3[int(roi[1]):int(roi[1]+roi[3]), int(roi[0]):int(roi[0]+roi[2])]
-
+	
+	#2nd check for deads with more filters to avoid some errors
+	roi = (1130, 443, 183, 40) #dead
+	thresh = 127
+	image3 = cv2.threshold(image3, thresh, 255, cv2.THRESH_BINARY)[1]
+	im_dead2 = image3[int(roi[1]):int(roi[1]+roi[3]), int(roi[0]):int(roi[0]+roi[2])]
 	#1st image data
 	gov_id = pytesseract.image_to_string(im_gov_id,config="-c tessedit_char_whitelist=0123456789,")
 	gov_power = pytesseract.image_to_string(im_gov_power,config="-c tessedit_char_whitelist=0123456789,")
@@ -204,11 +232,15 @@ for i in range(search_range):
 	
 	#3rd image data
 	gov_dead = pytesseract.image_to_string(im_dead,config="-c tessedit_char_whitelist=0123456789,")
+	gov_dead2 = pytesseract.image_to_string(im_dead2,config="-c tessedit_char_whitelist=0123456789,")
 	gov_rss_assistance = pytesseract.image_to_string(im_rss_assistance,config="-c tessedit_char_whitelist=0123456789,")
 
 	#Just to check the progress, printing in cmd the result for each governor
 	if gov_dead == '' :
-		gov_dead = '0\n'
+		if gov_dead2 == '':
+			gov_dead = '0\n'
+		else:
+			gov_dead = gov_dead2
 	if gov_kills_tier1 == '' :
 		gov_kills_tier1 = '0\n'
 	if gov_kills_tier2 == '' :
@@ -228,16 +260,20 @@ for i in range(search_range):
 	device.shell(f'input tap 1365 104') #close governor info
 	
 	#Write results in excel file
-	sheet1.write(i+1, 0, gov_name)
-	sheet1.write(i+1, 1, gov_id)
-	sheet1.write(i+1, 2, gov_power)
-	sheet1.write(i+1, 3, gov_killpoints)
-	sheet1.write(i+1, 4, gov_dead)
-	sheet1.write(i+1, 5, gov_kills_tier1)
-	sheet1.write(i+1, 6, gov_kills_tier2)
-	sheet1.write(i+1, 7, gov_kills_tier3)
-	sheet1.write(i+1, 8, gov_kills_tier4)
-	sheet1.write(i+1, 9, gov_kills_tier5)
-	sheet1.write(i+1, 10, gov_rss_assistance)
-#Save the excel file in the following format e.g. TOP300-2021-12-25-1253.xls 
-wb.save('TOP'+ str(search_range) + '-' +str(today)+ '-' + kingdom +'.xls')
+	sheet1.write(i+1-j, 0, gov_name)
+	sheet1.write(i+1-j, 1, gov_id)
+	sheet1.write(i+1-j, 2, gov_power)
+	sheet1.write(i+1-j, 3, gov_killpoints)
+	sheet1.write(i+1-j, 4, gov_dead)
+	sheet1.write(i+1-j, 5, gov_kills_tier1)
+	sheet1.write(i+1-j, 6, gov_kills_tier2)
+	sheet1.write(i+1-j, 7, gov_kills_tier3)
+	sheet1.write(i+1-j, 8, gov_kills_tier4)
+	sheet1.write(i+1-j, 9, gov_kills_tier5)
+	sheet1.write(i+1-j, 10, gov_rss_assistance)
+#Save the excel file in the following format e.g. TOP300-2021-12-25-1253.xls or NEXT300-2021-12-25-1253.xls
+if resume_scanning :
+	file_name_prefix = 'NEXT'
+else:
+	file_name_prefix = 'TOP'
+wb.save(file_name_prefix + str(search_range-j) + '-' +str(today)+ '-' + kingdom +'.xls')
