@@ -159,11 +159,24 @@ for i in range(j,search_range):
 	gov_rss_assistance = 0
 	#Open governor
 	device.shell(f'input tap 690 ' + str(Y[k]))
-	device.shell(f'input tap 690 ' + str(Y[k]))
 	time.sleep(3)
 	
+	image_check = device.screencap()
+	with open(('check_more_info.png'), 'wb') as f:
+				f.write(image_check)
+	image_check = cv2.imread('check_more_info.png')
+	roi = (313, 727, 137, 29)	#Checking for more info
+	im_check_more_info = image_check[int(roi[1]):int(roi[1]+roi[3]), int(roi[0]):int(roi[0]+roi[2])]
+	check_more_info = pytesseract.image_to_string(im_check_more_info,config="-c tessedit_char_whitelist=MoreInfo")
+	for p in range(2):
+		if 'MoreInfo' not in check_more_info :
+			device.shell(f'input tap 690 ' + str(Y[k]+115*(p+1)))
+			time.sleep(2)
+		else:
+			break
+	
 	#nickname copy
-	device.shell(f'input tap 690 283')	
+	device.shell(f'input tap 690 283')
 	time.sleep(2)
 	image = device.screencap()
 	with open(('gov_info.png'), 'wb') as f:
