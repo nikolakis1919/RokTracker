@@ -170,7 +170,7 @@ for i in range(j,search_range):
 		im_check_more_info = image_check[int(roi[1]):int(roi[1]+roi[3]), int(roi[0]):int(roi[0]+roi[2])]
 		check_more_info = pytesseract.image_to_string(im_check_more_info,config="-c tessedit_char_whitelist=MoreInfo")
 		if 'MoreInfo' not in check_more_info :
-			device.shell(f'input swipe 690 605 690 550')
+			device.shell(f'input swipe 690 605 690 540')
 			device.shell(f'input tap 690 ' + str(Y[k]))
 			time.sleep(2)
 		else:
