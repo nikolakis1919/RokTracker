@@ -23,15 +23,16 @@ Everything should be like this and no more emulators should be running concurren
 4. Platform tools folder should be extracted as a folder inside the Tracker's folder. Like the following image
 ![image](https://user-images.githubusercontent.com/96141261/146061510-8c39bc59-f8d2-4644-b005-3ce43d29a6cb.png)
 5. In order to get only your kingdoms ranks, the character that is currently logged in game must be in HOME KINGDOM, else you will get all the players in your KvK including players from different kingdoms.
-6. The view before running the programme should be at the top of power rankings or at the top of kill points rankings. No move should be made in this window until scanning is done.
-7. Account must be lower in ranks than the amount of players you want to scan. e.g. Cannot scan top 100 when character's rank is 85. Use a farm account instead.
-8. You can see tool's progress in CMD when it's running.
-9. Chinese letters are not shown properly in CMD but they are visible in the final .xls file.
-10. Bluestacks settings must be the same as in pictures above.
-11. You can do whatever you want in your computer when tool is scanning.
-12. Resume Scan option starts scanning the middle governor that is displayed in screen. The 4th in order. So before starting the tool make sure that you are in the correct view in bluestacks.
-13. BE CAREFUL to always copy the .xls file from the RokTracker folder when it is created, because in the next capture, there is a chance to overwrite.
-14. V2.0 New Added Feature. With \ button you can terminate the scan, saving current progress to .xls file. It will scan the current scanning governor and it won't continue to the next. Appropriate messages will appear in CMD.
+6. Game Language should be English. Anything else will cause trouble in detecting inactive governors. Change it only for scan, if yours is different and then switch back.
+7. The view before running the programme should be at the top of power rankings or at the top of kill points rankings. No move should be made in this window until scanning is done.
+8. Account must be lower in ranks than the amount of players you want to scan. e.g. Cannot scan top 100 when character's rank is 85. Use a farm account instead.
+9. You can see tool's progress in CMD when it's running.
+10. Chinese letters are not shown properly in CMD but they are visible in the final .xls file.
+11. Bluestacks settings must be the same as in pictures above.
+12. You can do whatever you want in your computer when tool is scanning.
+13. Resume Scan option starts scanning the middle governor that is displayed in screen. The 4th in order. So before starting the tool make sure that you are in the correct view in bluestacks.
+14. BE CAREFUL to always copy the .xls file from the RokTracker folder when it is created, because in the next capture, there is a chance to overwrite.
+15. V2.0 New Added Feature. With \ button you can terminate the scan, saving current progress to .xls file. It will scan the current scanning governor and it won't continue to the next. Appropriate messages will appear in CMD.
 
 # Contact and Support
 Any bugs that you may find or any suggestions you may have, please feel free to contact me in my discord: nikos#4469\
