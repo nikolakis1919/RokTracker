@@ -188,6 +188,7 @@ for i in range(j,search_range):
 	roi = (642, 230, 244, 38)
 	im_gov_id = image[int(roi[1]):int(roi[1]+roi[3]), int(roi[0]):int(roi[0]+roi[2])]
 	image = cv2.imread('gov_info.png',cv2.IMREAD_GRAYSCALE)
+	image = cv2.GaussianBlur(image, (5, 5), 0)
 	roi = (890, 364, 170, 44)
 	im_gov_power = image[int(roi[1]):int(roi[1]+roi[3]), int(roi[0]):int(roi[0]+roi[2])]
 	roi = (1114, 364, 222, 44)
