@@ -18,7 +18,7 @@ Everything should be like this and no more emulators should be running concurren
 
 # Important Notes
 1. Every requirement that tracker needs in order to run, will be installed automatically, by running the .bat file.
-2. You must run the .bat file as an administrator.
+2. You must run the .bat file without administration privileges.
 3. Change the installation path of Tesseract in .py file if your path is different. Open this file with your notepad and change the path to yours at 18th line of code. My path is C:\Program Files\Tesseract-OCR\tesseract.exe
 4. Platform tools folder should be extracted as a folder inside the Tracker's folder. Like the following image
 ![image](https://user-images.githubusercontent.com/96141261/146061510-8c39bc59-f8d2-4644-b005-3ce43d29a6cb.png)
