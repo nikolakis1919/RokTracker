@@ -13,6 +13,12 @@ from datetime import date
 import tkinter as tk
 import keyboard
 
+def tointcheck(element):
+	try:
+		return int(element)
+	except ValueError:
+		return element
+	
 #Initiliaze paths and variables
 today = date.today()
 
@@ -307,16 +313,16 @@ for i in range(j,search_range):
 
 	#Write results in excel file
 	sheet1.write(i+1-j, 0, gov_name)
-	sheet1.write(i+1-j, 1, int(gov_id))
-	sheet1.write(i+1-j, 2, int(gov_power))
-	sheet1.write(i+1-j, 3, int(gov_killpoints))
-	sheet1.write(i+1-j, 4, int(gov_dead))
-	sheet1.write(i+1-j, 5, int(gov_kills_tier1))
-	sheet1.write(i+1-j, 6, int(gov_kills_tier2))
-	sheet1.write(i+1-j, 7, int(gov_kills_tier3))
-	sheet1.write(i+1-j, 8, int(gov_kills_tier4))
-	sheet1.write(i+1-j, 9, int(gov_kills_tier5))
-	sheet1.write(i+1-j, 10, int(gov_rss_assistance))
+	sheet1.write(i+1-j, 1, tointcheck(gov_id))
+	sheet1.write(i+1-j, 2, tointcheck(gov_power))
+	sheet1.write(i+1-j, 3, tointcheck(gov_killpoints))
+	sheet1.write(i+1-j, 4, tointcheck(gov_dead))
+	sheet1.write(i+1-j, 5, tointcheck(gov_kills_tier1))
+	sheet1.write(i+1-j, 6, tointcheck(gov_kills_tier2))
+	sheet1.write(i+1-j, 7, tointcheck(gov_kills_tier3))
+	sheet1.write(i+1-j, 8, tointcheck(gov_kills_tier4))
+	sheet1.write(i+1-j, 9, tointcheck(gov_kills_tier5))
+	sheet1.write(i+1-j, 10, tointcheck(gov_rss_assistance))
 	
 #Save the excel file in the following format e.g. TOP300-2021-12-25-1253.xls or NEXT300-2021-12-25-1253.xls
 if resume_scanning :
