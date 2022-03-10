@@ -202,8 +202,12 @@ for i in range(j,search_range):
 	gov_name = tk.Tk().clipboard_get()
 	
 	#kills tier
-	device.shell(f'input tap 1118 350')	
-	time.sleep(1.5)
+	device.shell(f'input tap 1118 350')
+	
+	#1st image data
+	gov_id = pytesseract.image_to_string(im_gov_id,config="-c tessedit_char_whitelist=0123456789")
+	gov_power = pytesseract.image_to_string(im_gov_power,config="-c tessedit_char_whitelist=0123456789")
+	gov_killpoints = pytesseract.image_to_string(im_gov_killpoints,config="-c tessedit_char_whitelist=0123456789")
 	image = device.screencap()
 	with open(('kills_tier.png'), 'wb') as f:
 				f.write(image)
@@ -225,14 +229,19 @@ for i in range(j,search_range):
 
 	#More info tab
 	device.shell(f'input tap 387 664') 
-	time.sleep(1.5)
+	#2nd image data
+	gov_kills_tier1 = pytesseract.image_to_string(im_kills_tier1,config="-c tessedit_char_whitelist=0123456789")
+	gov_kills_tier2 = pytesseract.image_to_string(im_kills_tier2,config="-c tessedit_char_whitelist=0123456789")
+	gov_kills_tier3 = pytesseract.image_to_string(im_kills_tier3,config="-c tessedit_char_whitelist=0123456789")
+	gov_kills_tier4 = pytesseract.image_to_string(im_kills_tier4,config="-c tessedit_char_whitelist=0123456789")
+	gov_kills_tier5 = pytesseract.image_to_string(im_kills_tier5,config="-c tessedit_char_whitelist=0123456789")
+	
 	image = device.screencap()
 	with open(('more_info.png'), 'wb') as f:
 				f.write(image)
 	image3 = cv2.imread('more_info.png',cv2.IMREAD_GRAYSCALE)
 
 	roi = (1130, 443, 183, 40) #dead
-	
 	im_dead = image3[int(roi[1]):int(roi[1]+roi[3]), int(roi[0]):int(roi[0]+roi[2])]
 	roi = (1130, 668, 183, 40) #rss assistance
 	im_rss_assistance = image3[int(roi[1]):int(roi[1]+roi[3]), int(roi[0]):int(roi[0]+roi[2])]
@@ -251,18 +260,6 @@ for i in range(j,search_range):
 	im_dead3 = blur_img[int(roi[1]):int(roi[1]+roi[3]), int(roi[0]):int(roi[0]+roi[2])]
 	roi = (1130, 668, 183, 40) #rss assistance
 	im_rss_assistance3 = blur_img[int(roi[1]):int(roi[1]+roi[3]), int(roi[0]):int(roi[0]+roi[2])]
-	
-	#1st image data
-	gov_id = pytesseract.image_to_string(im_gov_id,config="-c tessedit_char_whitelist=0123456789")
-	gov_power = pytesseract.image_to_string(im_gov_power,config="-c tessedit_char_whitelist=0123456789")
-	gov_killpoints = pytesseract.image_to_string(im_gov_killpoints,config="-c tessedit_char_whitelist=0123456789")
-	
-	#2nd image data
-	gov_kills_tier1 = pytesseract.image_to_string(im_kills_tier1,config="-c tessedit_char_whitelist=0123456789")
-	gov_kills_tier2 = pytesseract.image_to_string(im_kills_tier2,config="-c tessedit_char_whitelist=0123456789")
-	gov_kills_tier3 = pytesseract.image_to_string(im_kills_tier3,config="-c tessedit_char_whitelist=0123456789")
-	gov_kills_tier4 = pytesseract.image_to_string(im_kills_tier4,config="-c tessedit_char_whitelist=0123456789")
-	gov_kills_tier5 = pytesseract.image_to_string(im_kills_tier5,config="-c tessedit_char_whitelist=0123456789")
 	
 	#3rd image data
 	gov_dead = pytesseract.image_to_string(im_dead,config="-c tessedit_char_whitelist=0123456789")
@@ -329,4 +326,4 @@ if resume_scanning :
 	file_name_prefix = 'NEXT'
 else:
 	file_name_prefix = 'TOP'
-wb.save(file_name_prefix + str(search_range-j) + '-' +str(today)+ '-' + kingdom +'.xlsx')
+wb.save(file_name_prefix + str(search_range-j) + '-' +str(today)+ '-' + kingdom +'.xls')
