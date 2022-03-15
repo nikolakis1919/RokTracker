@@ -167,6 +167,7 @@ for i in range(j,search_range):
 	device.shell(f'input tap 690 ' + str(Y[k]))
 	time.sleep(2)
 	gov_info = False
+	count = 0
 	while not (gov_info):
 		image_check = device.screencap()
 		with open(('check_more_info.png'), 'wb') as f:
@@ -178,7 +179,10 @@ for i in range(j,search_range):
 		if 'MoreInfo' not in check_more_info :
 			device.shell(f'input swipe 690 605 690 540')
 			device.shell(f'input tap 690 ' + str(Y[k]))
+			count += 1
 			time.sleep(2)
+			if count == 5:
+				break
 		else:
 			gov_info = True
 			break
