@@ -36,8 +36,7 @@ Everything should be like this and no more emulators should be running concurren
 
 # Contact and Support
 Any bugs that you may find or any suggestions you may have, please feel free to contact me in my discord: nikos#4469\
-If you like what i created, you can always support me. 
-https://www.buymeacoffee.com/nikolakis1919 \
+If you like what i created, you can always support me.\
 https://www.paypal.com/donate/?hosted_button_id=55G95MNYPVX72
 
 # Usage
