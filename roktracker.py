@@ -12,6 +12,7 @@ from xlwt import Workbook
 from datetime import date
 import tkinter as tk
 import keyboard
+from neural_network import read_ocr
 
 def tointcheck(element):
 	try:
@@ -126,6 +127,7 @@ sheet1.write(0, 7, 'Tier 3 Kills', style)
 sheet1.write(0, 8, 'Tier 4 Kills', style)
 sheet1.write(0, 9, 'Tier 5 Kills', style)
 sheet1.write(0, 10,'Rss Assistance', style)
+sheet1.write(0, 11,'Alliance', style)
 
 #Position for next governor to check
 Y =[285, 390, 490, 590, 605]
@@ -197,53 +199,58 @@ for i in range(j,search_range):
 	#Power and Killpoints
 	roi = (642, 230, 244, 38)
 	im_gov_id = image[int(roi[1]):int(roi[1]+roi[3]), int(roi[0]):int(roi[0]+roi[2])]
-	image = cv2.imread('gov_info.png',cv2.IMREAD_GRAYSCALE)
+	image = cv2.imread('gov_info.png')
 	image = cv2.GaussianBlur(image, (5, 5), 0)
 	roi = (890, 364, 170, 44)
 	im_gov_power = image[int(roi[1]):int(roi[1]+roi[3]), int(roi[0]):int(roi[0]+roi[2])]
 	roi = (1114, 364, 222, 44)
 	im_gov_killpoints = image[int(roi[1]):int(roi[1]+roi[3]), int(roi[0]):int(roi[0]+roi[2])]
 	gov_name = tk.Tk().clipboard_get()
+	roi = (645, 362, 260, 40) #alliance tag
+	im_alliance_tag = image[int(roi[1]):int(roi[1]+roi[3]), int(roi[0]):int(roi[0]+roi[2])]
 	
 	#kills tier
 	device.shell(f'input tap 1118 350')
 	
 	#1st image data
-	gov_id = pytesseract.image_to_string(im_gov_id,config="-c tessedit_char_whitelist=0123456789")
-	gov_power = pytesseract.image_to_string(im_gov_power,config="-c tessedit_char_whitelist=0123456789")
-	gov_killpoints = pytesseract.image_to_string(im_gov_killpoints,config="-c tessedit_char_whitelist=0123456789")
+	gov_id = read_ocr(im_gov_id)
+	gov_power = read_ocr(im_gov_power)
+	gov_killpoints = read_ocr(im_gov_killpoints)
+	time.sleep(2)
 	image = device.screencap()
 	with open(('kills_tier.png'), 'wb') as f:
 				f.write(image)
-	image2 = cv2.imread('kills_tier.png',cv2.IMREAD_GRAYSCALE)
-	roi = (867, 591, 215, 28) #tier 1
+	image2 = cv2.imread('kills_tier.png')
+	
+	roi = (862, 591, 215, 28) #tier 1
 	im_kills_tier1 = image2[int(roi[1]):int(roi[1]+roi[3]), int(roi[0]):int(roi[0]+roi[2])]
 
-	roi = (867, 636, 215, 26) #tier 2
+	roi = (862, 636, 215, 26) #tier 2
 	im_kills_tier2 = image2[int(roi[1]):int(roi[1]+roi[3]), int(roi[0]):int(roi[0]+roi[2])]
 
-	roi = (867, 681, 215, 26) #tier 3
+	roi = (862, 681, 215, 26) #tier 3
 	im_kills_tier3 = image2[int(roi[1]):int(roi[1]+roi[3]), int(roi[0]):int(roi[0]+roi[2])]
 
-	roi = (867, 726, 215, 26) #tier 4
+	roi = (862, 726, 215, 26) #tier 4
 	im_kills_tier4 = image2[int(roi[1]):int(roi[1]+roi[3]), int(roi[0]):int(roi[0]+roi[2])]
 
-	roi = (867, 771, 215, 26) #tier 5
+	roi = (862, 771, 215, 26) #tier 5
 	im_kills_tier5 = image2[int(roi[1]):int(roi[1]+roi[3]), int(roi[0]):int(roi[0]+roi[2])]
 
 	#More info tab
 	device.shell(f'input tap 387 664') 
+	
 	#2nd image data
 	gov_kills_tier1 = pytesseract.image_to_string(im_kills_tier1,config="-c tessedit_char_whitelist=0123456789")
 	gov_kills_tier2 = pytesseract.image_to_string(im_kills_tier2,config="-c tessedit_char_whitelist=0123456789")
 	gov_kills_tier3 = pytesseract.image_to_string(im_kills_tier3,config="-c tessedit_char_whitelist=0123456789")
 	gov_kills_tier4 = pytesseract.image_to_string(im_kills_tier4,config="-c tessedit_char_whitelist=0123456789")
 	gov_kills_tier5 = pytesseract.image_to_string(im_kills_tier5,config="-c tessedit_char_whitelist=0123456789")
-	
+	time.sleep(1)
 	image = device.screencap()
 	with open(('more_info.png'), 'wb') as f:
 				f.write(image)
-	image3 = cv2.imread('more_info.png',cv2.IMREAD_GRAYSCALE)
+	image3 = cv2.imread('more_info.png')
 
 	roi = (1130, 443, 183, 40) #dead
 	im_dead = image3[int(roi[1]):int(roi[1]+roi[3]), int(roi[0]):int(roi[0]+roi[2])]
@@ -266,47 +273,51 @@ for i in range(j,search_range):
 	im_rss_assistance3 = blur_img[int(roi[1]):int(roi[1]+roi[3]), int(roi[0]):int(roi[0]+roi[2])]
 	
 	#3rd image data
-	gov_dead = pytesseract.image_to_string(im_dead,config="-c tessedit_char_whitelist=0123456789")
-	gov_dead2 = pytesseract.image_to_string(im_dead2,config="-c tessedit_char_whitelist=0123456789")
-	gov_dead3 = pytesseract.image_to_string(im_dead3,config="-c tessedit_char_whitelist=0123456789")
-	gov_rss_assistance = pytesseract.image_to_string(im_rss_assistance,config="-c tessedit_char_whitelist=0123456789")
-	gov_rss_assistance2 = pytesseract.image_to_string(im_rss_assistance2,config="-c tessedit_char_whitelist=0123456789")
-	gov_rss_assistance3 = pytesseract.image_to_string(im_rss_assistance3,config="-c tessedit_char_whitelist=0123456789")
+	gov_dead = read_ocr(im_dead)
+	gov_dead2 = read_ocr(im_dead2)
+	gov_dead3 = read_ocr(im_dead3)
+	gov_rss_assistance = read_ocr(im_rss_assistance)
+	gov_rss_assistance2 = read_ocr(im_rss_assistance2)
+	gov_rss_assistance3 = read_ocr(im_rss_assistance3)
 	
+	
+	#alliance tag
+	gray = cv2.cvtColor(im_alliance_tag,cv2.COLOR_BGR2GRAY)
+	threshold_img = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)[1]
+	alliance_tag = pytesseract.image_to_string(threshold_img)
 	#Just to check the progress, printing in cmd the result for each governor
 	if gov_power == '':
-		gov_power = '0\n'
+		gov_power = 'Unknown'
 	if gov_killpoints =='':
-		gov_killpoints = '0\n'
+		gov_killpoints = 'Unknown'
 	if gov_dead == '' :
 		if gov_dead2 == '':
 			if gov_dead3 =='':
-				gov_dead = '0\n'
+				gov_dead = 'Uknown'
 			else:			
 				gov_dead = gov_dead3
 		else:
 			gov_dead = gov_dead2
 	if gov_kills_tier1 == '' :
-		gov_kills_tier1 = '0\n'
+		gov_kills_tier1 = 'Uknown\n'
 	if gov_kills_tier2 == '' :
-		gov_kills_tier2 = '0\n'
+		gov_kills_tier2 = 'Uknown\n'
 	if gov_kills_tier3 == '' :
-		gov_kills_tier3 = '0\n'
+		gov_kills_tier3 = 'Uknown\n'
 	if gov_kills_tier4 == '' :
-		gov_kills_tier4 = '0\n'
+		gov_kills_tier4 = 'Uknown\n'
 	if gov_kills_tier5 == '' :
-		gov_kills_tier5 = '0\n'
+		gov_kills_tier5 = 'Uknown\n'
 	if gov_rss_assistance == '' :
 		if gov_rss_assistance2 =='':
 			if gov_rss_assistance3 =='':
-				gov_rss_assistance = '0\n'
+				gov_rss_assistance = 'Uknown'
 			else: 
 				gov_rss_assistance = gov_rss_assistance3
 		else:
 			gov_rss_assistance= gov_rss_assistance2
 
-	print('Governor ID: ' + gov_id + 'Governor Name: ' + gov_name + '\nGovernor Power: ' + gov_power + 'Governor Killpoints: ' + gov_killpoints + 'Tier 1 kills: ' + gov_kills_tier1 + 'Tier 2 kills: ' + gov_kills_tier2 + 'Tier 3 kills: ' + gov_kills_tier3 + 'Tier 4 kills: ' +  gov_kills_tier4 + 'Tier 5 kills: ' + gov_kills_tier5 + 'Governor Dead Troops: ' + gov_dead + 'Governor RSS Assistance: ' + gov_rss_assistance)
-	  
+	print('Governor ID: ' + str(gov_id) + '\nGovernor Name: ' + gov_name + '\nGovernor Power: ' + str(gov_power) + '\nGovernor Killpoints: ' + str(gov_killpoints) + '\nTier 1 kills: ' + str(gov_kills_tier1) + 'Tier 2 kills: ' + str(gov_kills_tier2) + 'Tier 3 kills: ' + str(gov_kills_tier3) + 'Tier 4 kills: ' +  str(gov_kills_tier4) + 'Tier 5 kills: ' + str(gov_kills_tier5) + 'Governor Dead Troops: ' + str(gov_dead) + '\nGovernor RSS Assistance: ' + str(gov_rss_assistance) +'\nAlliance: ' + str(alliance_tag) + '\n') 
 	device.shell(f'input tap 1396 58') #close more info
 	time.sleep(0.5)
 	device.shell(f'input tap 1365 104') #close governor info
@@ -324,6 +335,7 @@ for i in range(j,search_range):
 	sheet1.write(i+1-j, 8, tointcheck(gov_kills_tier4))
 	sheet1.write(i+1-j, 9, tointcheck(gov_kills_tier5))
 	sheet1.write(i+1-j, 10, tointcheck(gov_rss_assistance))
+	sheet1.write(i+1-j, 11, alliance_tag)
 	
 #Save the excel file in the following format e.g. TOP300-2021-12-25-1253.xls or NEXT300-2021-12-25-1253.xls
 if resume_scanning :
