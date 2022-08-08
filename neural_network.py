@@ -9,7 +9,6 @@ from collections import Counter
 import os
 import csv
 from difflib import SequenceMatcher
-import pandas as pd
 from time import gmtime, strftime
 
 def read_ocr(image):
