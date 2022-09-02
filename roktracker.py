@@ -11,9 +11,13 @@ import xlwt
 from xlwt import Workbook
 from datetime import date
 import tkinter as tk
+from tkinter import messagebox
 import keyboard
 from neural_network import read_ocr
+import requests
+import webbrowser
 
+version = "RokTracker-v6.0"
 def tointcheck(element):
 	try:
 		return int(element)
@@ -31,8 +35,16 @@ def resource_path(relative_path):
     return os.path.join(os.path.abspath("."), relative_path)
 os.system("")
 
+##### Update Checker #####
+response = requests.get("https://api.github.com/repos/nikolakis1919/RokTracker/releases/latest")
+if (response.json()["name"]) != version:
+	bo = tk.Tk()
+	bo.withdraw()
+	messagebox.showinfo("Tool is outdated", "New version is available on github repository. It is highly recommended to update the tool!")
+	bo.destroy()
 
-#######Tkinter Section
+
+####### Tkinter Section ##########
 #Create input gui
 root=tk.Tk()
 
@@ -40,7 +52,11 @@ root=tk.Tk()
 root.title('RokTracker')
 
 #Tkinter window size
-root.geometry("300x250")
+root.geometry("400x250")
+
+#Tkinter function
+def link():
+	webbrowser.open_new(r"https://www.paypal.com/donate/?hosted_button_id=55G95MNYPVX72")
 
 #Initialize Options for dropdown box
 OPTIONS = []
@@ -60,6 +76,8 @@ search_top_label = tk.Label(root, text = 'Search Amount', font=('calibre',10, 'b
 #Copyrights
 copyright=u"\u00A9"
 l1=tk.Label(root,text=copyright + ' nikolakis1919', font = ('calibre',10,'bold')) 
+l2=tk.Button(root, foreground='Green', text='Donate', command=link, font = ('calibre',10,'bold'))
+l3=tk.Label(root,text='Find me on discord: nikos#4469', font = ('calibre',10,'bold'))
 
 #Input Fields
 kingdom_entry = tk.Entry(root,textvariable = variable, font=('calibre',10,'normal'))
@@ -90,7 +108,8 @@ w.grid(row=1,column=1)
 resume_scan.grid(row=2,column=1,pady=4)
 button.grid(row=3,column=1,pady=5)
 l1.grid(row=4,column=1,pady=10)
-
+l2.grid(row=8,column=1,pady=10)
+l3.grid(row=5,column=1,pady=10)
 root.mainloop()
 
 #######RokTracker
@@ -140,6 +159,8 @@ if resume_scanning:
 #The loop in TOP XXX Governors in kingdom - It works both for power and killpoints Rankings
 #MUST have the tab opened to the 1st governor(Power or Killpoints)
 
+
+##### Save button listener#####
 stop = False
 def onkeypress(event):
 	global stop
@@ -148,6 +169,10 @@ def onkeypress(event):
 		stop = True
 
 keyboard.on_press(onkeypress)
+
+
+
+
 
 for i in range(j,search_range):
 	if stop:
@@ -168,6 +193,8 @@ for i in range(j,search_range):
 	#Open governor
 	device.shell(f'input tap 690 ' + str(Y[k]))
 	time.sleep(2)
+	
+	##### Ensure that governor tab is open #####
 	gov_info = False
 	count = 0
 	while not (gov_info):
@@ -175,7 +202,7 @@ for i in range(j,search_range):
 		with open(('check_more_info.png'), 'wb') as f:
 					f.write(image_check)
 		image_check = cv2.imread('check_more_info.png',cv2.IMREAD_GRAYSCALE)
-		roi = (313, 727, 137, 29)	#Checking for more info
+		roi = (313, 727, 137, 29)	
 		im_check_more_info = image_check[int(roi[1]):int(roi[1]+roi[3]), int(roi[0]):int(roi[0]+roi[2])]
 		check_more_info = pytesseract.image_to_string(im_check_more_info,config="-c tessedit_char_whitelist=MoreInfo")
 		if 'MoreInfo' not in check_more_info :
@@ -191,7 +218,9 @@ for i in range(j,search_range):
 	
 	#nickname copy
 	device.shell(f'input tap 690 283')
-	time.sleep(2)
+	time.sleep(1.5)
+	
+	##### Governor main page capture #####
 	image = device.screencap()
 	with open(('gov_info.png'), 'wb') as f:
 				f.write(image)
@@ -200,8 +229,10 @@ for i in range(j,search_range):
 	roi = (642, 230, 244, 38)
 	im_gov_id = image[int(roi[1]):int(roi[1]+roi[3]), int(roi[0]):int(roi[0]+roi[2])]
 	image = cv2.imread('gov_info.png')
-	image = cv2.GaussianBlur(image, (5, 5), 0)
-	roi = (890, 364, 170, 44)
+	kernel = np.ones((2, 2), np.uint8)
+ 
+	image = cv2.dilate(image, kernel) 
+	roi = (898, 364, 180, 44)
 	im_gov_power = image[int(roi[1]):int(roi[1]+roi[3]), int(roi[0]):int(roi[0]+roi[2])]
 	roi = (1114, 364, 222, 44)
 	im_gov_killpoints = image[int(roi[1]):int(roi[1]+roi[3]), int(roi[0]):int(roi[0]+roi[2])]
@@ -212,16 +243,18 @@ for i in range(j,search_range):
 	#kills tier
 	device.shell(f'input tap 1118 350')
 	
-	#1st image data
+	#1st image OCR
 	gov_id = read_ocr(im_gov_id)
 	gov_power = read_ocr(im_gov_power)
 	gov_killpoints = read_ocr(im_gov_killpoints)
-	time.sleep(2)
+	time.sleep(1)
+	
+	##### Kill tier Capture #####
 	image = device.screencap()
 	with open(('kills_tier.png'), 'wb') as f:
 				f.write(image)
-	image2 = cv2.imread('kills_tier.png')
-	
+	image2 = cv2.imread('kills_tier.png') 	
+	image2 = cv2.fastNlMeansDenoisingColored(image2,None,20,20,7,21) 
 	roi = (862, 591, 215, 28) #tier 1
 	im_kills_tier1 = image2[int(roi[1]):int(roi[1]+roi[3]), int(roi[0]):int(roi[0]+roi[2])]
 
@@ -240,18 +273,22 @@ for i in range(j,search_range):
 	#More info tab
 	device.shell(f'input tap 387 664') 
 	
-	#2nd image data
+	##### Kill tier OCR #####
 	gov_kills_tier1 = pytesseract.image_to_string(im_kills_tier1,config="-c tessedit_char_whitelist=0123456789")
 	gov_kills_tier2 = pytesseract.image_to_string(im_kills_tier2,config="-c tessedit_char_whitelist=0123456789")
 	gov_kills_tier3 = pytesseract.image_to_string(im_kills_tier3,config="-c tessedit_char_whitelist=0123456789")
 	gov_kills_tier4 = pytesseract.image_to_string(im_kills_tier4,config="-c tessedit_char_whitelist=0123456789")
 	gov_kills_tier5 = pytesseract.image_to_string(im_kills_tier5,config="-c tessedit_char_whitelist=0123456789")
 	time.sleep(1)
+	
+	
+	##### More Info Page Capture #####
 	image = device.screencap()
 	with open(('more_info.png'), 'wb') as f:
 				f.write(image)
 	image3 = cv2.imread('more_info.png')
-
+	kernel = np.ones((2, 2), np.uint8)
+	image3 = cv2.dilate(image3, kernel) 
 	roi = (1130, 443, 183, 40) #dead
 	im_dead = image3[int(roi[1]):int(roi[1]+roi[3]), int(roi[0]):int(roi[0]+roi[2])]
 	roi = (1130, 668, 183, 40) #rss assistance
@@ -272,7 +309,7 @@ for i in range(j,search_range):
 	roi = (1130, 668, 183, 40) #rss assistance
 	im_rss_assistance3 = blur_img[int(roi[1]):int(roi[1]+roi[3]), int(roi[0]):int(roi[0]+roi[2])]
 	
-	#3rd image data
+	##### More info page OCR #####
 	gov_dead = read_ocr(im_dead)
 	gov_dead2 = read_ocr(im_dead2)
 	gov_dead3 = read_ocr(im_dead3)
@@ -281,10 +318,12 @@ for i in range(j,search_range):
 	gov_rss_assistance3 = read_ocr(im_rss_assistance3)
 	
 	
-	#alliance tag
+	##### Alliance tag #####
 	gray = cv2.cvtColor(im_alliance_tag,cv2.COLOR_BGR2GRAY)
 	threshold_img = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)[1]
 	alliance_tag = pytesseract.image_to_string(threshold_img)
+	
+	
 	#Just to check the progress, printing in cmd the result for each governor
 	if gov_power == '':
 		gov_power = 'Unknown'
@@ -293,25 +332,25 @@ for i in range(j,search_range):
 	if gov_dead == '' :
 		if gov_dead2 == '':
 			if gov_dead3 =='':
-				gov_dead = 'Uknown'
+				gov_dead = 'Unknown'
 			else:			
 				gov_dead = gov_dead3
 		else:
 			gov_dead = gov_dead2
 	if gov_kills_tier1 == '' :
-		gov_kills_tier1 = 'Uknown\n'
+		gov_kills_tier1 = 'Unknown\n'
 	if gov_kills_tier2 == '' :
-		gov_kills_tier2 = 'Uknown\n'
+		gov_kills_tier2 = 'Unknown\n'
 	if gov_kills_tier3 == '' :
-		gov_kills_tier3 = 'Uknown\n'
+		gov_kills_tier3 = 'Unknown\n'
 	if gov_kills_tier4 == '' :
-		gov_kills_tier4 = 'Uknown\n'
+		gov_kills_tier4 = 'Unknown\n'
 	if gov_kills_tier5 == '' :
-		gov_kills_tier5 = 'Uknown\n'
+		gov_kills_tier5 = 'Unknown\n'
 	if gov_rss_assistance == '' :
 		if gov_rss_assistance2 =='':
 			if gov_rss_assistance3 =='':
-				gov_rss_assistance = 'Uknown'
+				gov_rss_assistance = 'Unknown'
 			else: 
 				gov_rss_assistance = gov_rss_assistance3
 		else:
