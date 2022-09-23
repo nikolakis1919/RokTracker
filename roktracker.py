@@ -17,7 +17,7 @@ from neural_network import read_ocr
 import requests
 import webbrowser
 
-version = "RokTracker-v6.0"
+version = "RokTracker-v6.1"
 def tointcheck(element):
 	try:
 		return int(element)
@@ -255,19 +255,19 @@ for i in range(j,search_range):
 				f.write(image)
 	image2 = cv2.imread('kills_tier.png') 	
 	image2 = cv2.fastNlMeansDenoisingColored(image2,None,20,20,7,21) 
-	roi = (862, 591, 215, 28) #tier 1
+	roi = (863, 597, 215, 26) #tier 1
 	im_kills_tier1 = image2[int(roi[1]):int(roi[1]+roi[3]), int(roi[0]):int(roi[0]+roi[2])]
 
-	roi = (862, 636, 215, 26) #tier 2
+	roi = (863, 642, 215, 26) #tier 2
 	im_kills_tier2 = image2[int(roi[1]):int(roi[1]+roi[3]), int(roi[0]):int(roi[0]+roi[2])]
 
-	roi = (862, 681, 215, 26) #tier 3
+	roi = (863, 687, 215, 26) #tier 3
 	im_kills_tier3 = image2[int(roi[1]):int(roi[1]+roi[3]), int(roi[0]):int(roi[0]+roi[2])]
 
-	roi = (862, 726, 215, 26) #tier 4
+	roi = (863, 732, 215, 26) #tier 4
 	im_kills_tier4 = image2[int(roi[1]):int(roi[1]+roi[3]), int(roi[0]):int(roi[0]+roi[2])]
 
-	roi = (862, 771, 215, 26) #tier 5
+	roi = (863, 777, 215, 26) #tier 5
 	im_kills_tier5 = image2[int(roi[1]):int(roi[1]+roi[3]), int(roi[0]):int(roi[0]+roi[2])]
 
 	#More info tab
