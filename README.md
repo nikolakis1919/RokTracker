@@ -21,7 +21,7 @@ Everything should be like this and no more emulators should be running concurren
 2. You must run the .bat file without administration privileges.
 3. Change the installation path of Tesseract in .py file if your path is different. Open this file with your notepad and change the path to yours at 18th line of code. My path is C:\Program Files\Tesseract-OCR\tesseract.exe
 4. Platform tools folder should be extracted as a folder inside the Tracker's folder. Like the following image
-![image](https://user-images.githubusercontent.com/96141261/191935918-7ead66a7-fac4-4ede-8446-916878704ef7.png)
+![image](https://user-images.githubusercontent.com/96141261/191936152-f0fbd0c0-a026-48d0-bd1e-07947e2805bd.png)
 5. In order to get only your kingdoms ranks, the character that is currently logged in game must be in HOME KINGDOM, else you will get all the players in your KvK including players from different kingdoms.
 6. Game Language should be English. Anything else will cause trouble in detecting inactive governors. Change it only for scan, if yours is different and then switch back.
 7. The view before running the programme should be at the top of power rankings or at the top of kill points rankings. No move should be made in this window until scanning is done.
