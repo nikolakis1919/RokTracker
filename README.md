@@ -4,7 +4,7 @@ Open Source Rise of Kingdoms Stats Management Tool. Track TOP (50-975) Players i
 # Required
 1. Bluestacks 5 Installation
 https://cdn3.bluestacks.com/downloads/windows/nxt/5.4.100.1026/0129e8eb74f84fc396a1500329365a09/BlueStacksMicroInstaller_5.4.100.1026_native.exe?filename=BlueStacksMicroInstaller_5.4.100.1026_native_5ffb0694218e1b99e7000bed6dcbe547_0.exe
-**2. Python 3.6.8 Installation** https://www.python.org/ftp/python/3.6.8/python-3.6.8-amd64.exe
+2. **Python 3.6.8 Installation(MAKE SURE YOU CLICK ADD TO PATH OPTION IN INSTALLER)** https://www.python.org/ftp/python/3.6.8/python-3.6.8-amd64.exe
 3. Tesseract-OCR Installation https://digi.bib.uni-mannheim.de/tesseract/tesseract-ocr-w64-setup-v5.0.0.20211201.exe
 4. Adb Platform Tools Download and Extract(See Important Notes) https://dl.google.com/android/repository/platform-tools_r31.0.3-windows.zip
 5. Windows 10-Tested, Windows 7 or Windows 11 could be fine.
