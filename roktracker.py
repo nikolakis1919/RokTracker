@@ -378,7 +378,7 @@ try:
 except:
 	print('An issue has occured. Please rerun the tool and use "resume scan option" from where tool stopped. If issue seems to remain, please contact me on discord!')
 #Save the excel file in the following format e.g. TOP300-2021-12-25-1253.xls or NEXT300-2021-12-25-1253.xls
-	continue
+	pass
 
 
 if resume_scanning :
