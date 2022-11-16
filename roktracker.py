@@ -17,7 +17,7 @@ from neural_network import read_ocr
 import requests
 import webbrowser
 
-version = "RokTracker-v6.1"
+version = "RokTracker-v7.0"
 def tointcheck(element):
 	try:
 		return int(element)
@@ -173,210 +173,214 @@ keyboard.on_press(onkeypress)
 
 
 
-
-for i in range(j,search_range):
-	if stop:
-		print("Scan Terminated! Saving the current progress...")
-		break
-	if i>4:
-		k = 4
-	else:
-		k = i
-		
-	gov_dead = 0
-	gov_kills_tier1 = 0
-	gov_kills_tier2 = 0
-	gov_kills_tier3 = 0
-	gov_kills_tier4 = 0
-	gov_kills_tier5 = 0
-	gov_rss_assistance = 0
-	#Open governor
-	device.shell(f'input tap 690 ' + str(Y[k]))
-	time.sleep(2)
-	
-	##### Ensure that governor tab is open #####
-	gov_info = False
-	count = 0
-	while not (gov_info):
-		image_check = device.screencap()
-		with open(('check_more_info.png'), 'wb') as f:
-					f.write(image_check)
-		image_check = cv2.imread('check_more_info.png',cv2.IMREAD_GRAYSCALE)
-		roi = (313, 727, 137, 29)	
-		im_check_more_info = image_check[int(roi[1]):int(roi[1]+roi[3]), int(roi[0]):int(roi[0]+roi[2])]
-		check_more_info = pytesseract.image_to_string(im_check_more_info,config="-c tessedit_char_whitelist=MoreInfo")
-		if 'MoreInfo' not in check_more_info :
-			device.shell(f'input swipe 690 605 690 540')
-			device.shell(f'input tap 690 ' + str(Y[k]))
-			count += 1
-			time.sleep(2)
-			if count == 5:
-				break
-		else:
-			gov_info = True
+try:
+	for i in range(j,search_range):
+		if stop:
+			print("Scan Terminated! Saving the current progress...")
 			break
-	
-	#nickname copy
-	device.shell(f'input tap 690 283')
-	time.sleep(1.5)
-	
-	##### Governor main page capture #####
-	image = device.screencap()
-	with open(('gov_info.png'), 'wb') as f:
-				f.write(image)
-	image = cv2.imread('gov_info.png')
-	#Power and Killpoints
-	roi = (642, 230, 244, 38)
-	im_gov_id = image[int(roi[1]):int(roi[1]+roi[3]), int(roi[0]):int(roi[0]+roi[2])]
-	image = cv2.imread('gov_info.png')
-	kernel = np.ones((2, 2), np.uint8)
- 
-	image = cv2.dilate(image, kernel) 
-	roi = (898, 364, 180, 44)
-	im_gov_power = image[int(roi[1]):int(roi[1]+roi[3]), int(roi[0]):int(roi[0]+roi[2])]
-	roi = (1114, 364, 222, 44)
-	im_gov_killpoints = image[int(roi[1]):int(roi[1]+roi[3]), int(roi[0]):int(roi[0]+roi[2])]
-	gov_name = tk.Tk().clipboard_get()
-	roi = (645, 362, 260, 40) #alliance tag
-	im_alliance_tag = image[int(roi[1]):int(roi[1]+roi[3]), int(roi[0]):int(roi[0]+roi[2])]
-	
-	#kills tier
-	device.shell(f'input tap 1118 350')
-	
-	#1st image OCR
-	gov_id = read_ocr(im_gov_id)
-	gov_power = read_ocr(im_gov_power)
-	gov_killpoints = read_ocr(im_gov_killpoints)
-	time.sleep(1)
-	
-	##### Kill tier Capture #####
-	image = device.screencap()
-	with open(('kills_tier.png'), 'wb') as f:
-				f.write(image)
-	image2 = cv2.imread('kills_tier.png') 	
-	image2 = cv2.fastNlMeansDenoisingColored(image2,None,20,20,7,21) 
-	roi = (863, 597, 215, 26) #tier 1
-	im_kills_tier1 = image2[int(roi[1]):int(roi[1]+roi[3]), int(roi[0]):int(roi[0]+roi[2])]
-
-	roi = (863, 642, 215, 26) #tier 2
-	im_kills_tier2 = image2[int(roi[1]):int(roi[1]+roi[3]), int(roi[0]):int(roi[0]+roi[2])]
-
-	roi = (863, 687, 215, 26) #tier 3
-	im_kills_tier3 = image2[int(roi[1]):int(roi[1]+roi[3]), int(roi[0]):int(roi[0]+roi[2])]
-
-	roi = (863, 732, 215, 26) #tier 4
-	im_kills_tier4 = image2[int(roi[1]):int(roi[1]+roi[3]), int(roi[0]):int(roi[0]+roi[2])]
-
-	roi = (863, 777, 215, 26) #tier 5
-	im_kills_tier5 = image2[int(roi[1]):int(roi[1]+roi[3]), int(roi[0]):int(roi[0]+roi[2])]
-
-	#More info tab
-	device.shell(f'input tap 387 664') 
-	
-	##### Kill tier OCR #####
-	gov_kills_tier1 = pytesseract.image_to_string(im_kills_tier1,config="-c tessedit_char_whitelist=0123456789")
-	gov_kills_tier2 = pytesseract.image_to_string(im_kills_tier2,config="-c tessedit_char_whitelist=0123456789")
-	gov_kills_tier3 = pytesseract.image_to_string(im_kills_tier3,config="-c tessedit_char_whitelist=0123456789")
-	gov_kills_tier4 = pytesseract.image_to_string(im_kills_tier4,config="-c tessedit_char_whitelist=0123456789")
-	gov_kills_tier5 = pytesseract.image_to_string(im_kills_tier5,config="-c tessedit_char_whitelist=0123456789")
-	time.sleep(1)
-	
-	
-	##### More Info Page Capture #####
-	image = device.screencap()
-	with open(('more_info.png'), 'wb') as f:
-				f.write(image)
-	image3 = cv2.imread('more_info.png')
-	kernel = np.ones((2, 2), np.uint8)
-	image3 = cv2.dilate(image3, kernel) 
-	roi = (1130, 443, 183, 40) #dead
-	im_dead = image3[int(roi[1]):int(roi[1]+roi[3]), int(roi[0]):int(roi[0]+roi[2])]
-	roi = (1130, 668, 183, 40) #rss assistance
-	im_rss_assistance = image3[int(roi[1]):int(roi[1]+roi[3]), int(roi[0]):int(roi[0]+roi[2])]
-	
-	#2nd check for deads with more filters to avoid some errors
-	roi = (1130, 443, 183, 40) #dead
-	thresh = 127
-	thresh_image = cv2.threshold(image3, thresh, 255, cv2.THRESH_BINARY)[1]
-	im_dead2 = thresh_image[int(roi[1]):int(roi[1]+roi[3]), int(roi[0]):int(roi[0]+roi[2])]
-	roi = (1130, 668, 183, 40) #rss assistance
-	im_rss_assistance2 = thresh_image[int(roi[1]):int(roi[1]+roi[3]), int(roi[0]):int(roi[0]+roi[2])]
-	
-	#3rd check for deads with more filters to avoid some errors
-	roi = (1130, 443, 183, 40) #dead
-	blur_img = cv2.GaussianBlur(image3, (3, 3), 0)
-	im_dead3 = blur_img[int(roi[1]):int(roi[1]+roi[3]), int(roi[0]):int(roi[0]+roi[2])]
-	roi = (1130, 668, 183, 40) #rss assistance
-	im_rss_assistance3 = blur_img[int(roi[1]):int(roi[1]+roi[3]), int(roi[0]):int(roi[0]+roi[2])]
-	
-	##### More info page OCR #####
-	gov_dead = read_ocr(im_dead)
-	gov_dead2 = read_ocr(im_dead2)
-	gov_dead3 = read_ocr(im_dead3)
-	gov_rss_assistance = read_ocr(im_rss_assistance)
-	gov_rss_assistance2 = read_ocr(im_rss_assistance2)
-	gov_rss_assistance3 = read_ocr(im_rss_assistance3)
-	
-	
-	##### Alliance tag #####
-	gray = cv2.cvtColor(im_alliance_tag,cv2.COLOR_BGR2GRAY)
-	threshold_img = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)[1]
-	alliance_tag = pytesseract.image_to_string(threshold_img)
-	
-	
-	#Just to check the progress, printing in cmd the result for each governor
-	if gov_power == '':
-		gov_power = 'Unknown'
-	if gov_killpoints =='':
-		gov_killpoints = 'Unknown'
-	if gov_dead == '' :
-		if gov_dead2 == '':
-			if gov_dead3 =='':
-				gov_dead = 'Unknown'
-			else:			
-				gov_dead = gov_dead3
+		if i>4:
+			k = 4
 		else:
-			gov_dead = gov_dead2
-	if gov_kills_tier1 == '' :
-		gov_kills_tier1 = 'Unknown\n'
-	if gov_kills_tier2 == '' :
-		gov_kills_tier2 = 'Unknown\n'
-	if gov_kills_tier3 == '' :
-		gov_kills_tier3 = 'Unknown\n'
-	if gov_kills_tier4 == '' :
-		gov_kills_tier4 = 'Unknown\n'
-	if gov_kills_tier5 == '' :
-		gov_kills_tier5 = 'Unknown\n'
-	if gov_rss_assistance == '' :
-		if gov_rss_assistance2 =='':
-			if gov_rss_assistance3 =='':
-				gov_rss_assistance = 'Unknown'
-			else: 
-				gov_rss_assistance = gov_rss_assistance3
-		else:
-			gov_rss_assistance= gov_rss_assistance2
+			k = i
+			
+		gov_dead = 0
+		gov_kills_tier1 = 0
+		gov_kills_tier2 = 0
+		gov_kills_tier3 = 0
+		gov_kills_tier4 = 0
+		gov_kills_tier5 = 0
+		gov_rss_assistance = 0
+		#Open governor
+		device.shell(f'input tap 690 ' + str(Y[k]))
+		time.sleep(2)
+		
+		##### Ensure that governor tab is open #####
+		gov_info = False
+		count = 0
+		while not (gov_info):
+			image_check = device.screencap()
+			with open(('check_more_info.png'), 'wb') as f:
+						f.write(image_check)
+			image_check = cv2.imread('check_more_info.png',cv2.IMREAD_GRAYSCALE)
+			roi = (313, 727, 137, 29)	
+			im_check_more_info = image_check[int(roi[1]):int(roi[1]+roi[3]), int(roi[0]):int(roi[0]+roi[2])]
+			check_more_info = pytesseract.image_to_string(im_check_more_info,config="-c tessedit_char_whitelist=MoreInfo")
+			if 'MoreInfo' not in check_more_info :
+				device.shell(f'input swipe 690 605 690 540')
+				device.shell(f'input tap 690 ' + str(Y[k]))
+				count += 1
+				time.sleep(2)
+				if count == 5:
+					break
+			else:
+				gov_info = True
+				break
+		
+		#nickname copy
+		device.shell(f'input tap 690 283')
+		time.sleep(1.5)
+		
+		##### Governor main page capture #####
+		image = device.screencap()
+		with open(('gov_info.png'), 'wb') as f:
+					f.write(image)
+		image = cv2.imread('gov_info.png')
+		#Power and Killpoints
+		roi = (642, 230, 258, 38)
+		im_gov_id = image[int(roi[1]):int(roi[1]+roi[3]), int(roi[0]):int(roi[0]+roi[2])]
+		image = cv2.imread('gov_info.png')
+		kernel = np.ones((2, 2), np.uint8)
+	 
+		image = cv2.dilate(image, kernel) 
+		roi = (898, 364, 180, 44)
+		im_gov_power = image[int(roi[1]):int(roi[1]+roi[3]), int(roi[0]):int(roi[0]+roi[2])]
+		roi = (1114, 364, 222, 44)
+		im_gov_killpoints = image[int(roi[1]):int(roi[1]+roi[3]), int(roi[0]):int(roi[0]+roi[2])]
+		gov_name = tk.Tk().clipboard_get()
+		roi = (645, 362, 260, 40) #alliance tag
+		im_alliance_tag = image[int(roi[1]):int(roi[1]+roi[3]), int(roi[0]):int(roi[0]+roi[2])]
+		
+		#kills tier
+		device.shell(f'input tap 1118 350')
+		
+		#1st image OCR
+		gov_id = read_ocr(im_gov_id)
+		gov_power = read_ocr(im_gov_power)
+		gov_killpoints = read_ocr(im_gov_killpoints)
+		time.sleep(1)
+		
+		##### Kill tier Capture #####
+		image = device.screencap()
+		with open(('kills_tier.png'), 'wb') as f:
+					f.write(image)
+		image2 = cv2.imread('kills_tier.png') 	
+		image2 = cv2.fastNlMeansDenoisingColored(image2,None,20,20,7,21) 
+		roi = (863, 597, 215, 26) #tier 1
+		im_kills_tier1 = image2[int(roi[1]):int(roi[1]+roi[3]), int(roi[0]):int(roi[0]+roi[2])]
 
-	print('Governor ID: ' + str(gov_id) + '\nGovernor Name: ' + gov_name + '\nGovernor Power: ' + str(gov_power) + '\nGovernor Killpoints: ' + str(gov_killpoints) + '\nTier 1 kills: ' + str(gov_kills_tier1) + 'Tier 2 kills: ' + str(gov_kills_tier2) + 'Tier 3 kills: ' + str(gov_kills_tier3) + 'Tier 4 kills: ' +  str(gov_kills_tier4) + 'Tier 5 kills: ' + str(gov_kills_tier5) + 'Governor Dead Troops: ' + str(gov_dead) + '\nGovernor RSS Assistance: ' + str(gov_rss_assistance) +'\nAlliance: ' + str(alliance_tag) + '\n') 
-	device.shell(f'input tap 1396 58') #close more info
-	time.sleep(0.5)
-	device.shell(f'input tap 1365 104') #close governor info
-	time.sleep(1)
+		roi = (863, 642, 215, 26) #tier 2
+		im_kills_tier2 = image2[int(roi[1]):int(roi[1]+roi[3]), int(roi[0]):int(roi[0]+roi[2])]
 
-	#Write results in excel file
-	sheet1.write(i+1-j, 0, gov_name)
-	sheet1.write(i+1-j, 1, tointcheck(gov_id))
-	sheet1.write(i+1-j, 2, tointcheck(gov_power))
-	sheet1.write(i+1-j, 3, tointcheck(gov_killpoints))
-	sheet1.write(i+1-j, 4, tointcheck(gov_dead))
-	sheet1.write(i+1-j, 5, tointcheck(gov_kills_tier1))
-	sheet1.write(i+1-j, 6, tointcheck(gov_kills_tier2))
-	sheet1.write(i+1-j, 7, tointcheck(gov_kills_tier3))
-	sheet1.write(i+1-j, 8, tointcheck(gov_kills_tier4))
-	sheet1.write(i+1-j, 9, tointcheck(gov_kills_tier5))
-	sheet1.write(i+1-j, 10, tointcheck(gov_rss_assistance))
-	sheet1.write(i+1-j, 11, alliance_tag)
-	
+		roi = (863, 687, 215, 26) #tier 3
+		im_kills_tier3 = image2[int(roi[1]):int(roi[1]+roi[3]), int(roi[0]):int(roi[0]+roi[2])]
+
+		roi = (863, 732, 215, 26) #tier 4
+		im_kills_tier4 = image2[int(roi[1]):int(roi[1]+roi[3]), int(roi[0]):int(roi[0]+roi[2])]
+
+		roi = (863, 777, 215, 26) #tier 5
+		im_kills_tier5 = image2[int(roi[1]):int(roi[1]+roi[3]), int(roi[0]):int(roi[0]+roi[2])]
+
+		#More info tab
+		device.shell(f'input tap 387 664') 
+		
+		##### Kill tier OCR #####
+		gov_kills_tier1 = pytesseract.image_to_string(im_kills_tier1,config="-c tessedit_char_whitelist=0123456789")
+		gov_kills_tier2 = pytesseract.image_to_string(im_kills_tier2,config="-c tessedit_char_whitelist=0123456789")
+		gov_kills_tier3 = pytesseract.image_to_string(im_kills_tier3,config="-c tessedit_char_whitelist=0123456789")
+		gov_kills_tier4 = pytesseract.image_to_string(im_kills_tier4,config="-c tessedit_char_whitelist=0123456789")
+		gov_kills_tier5 = pytesseract.image_to_string(im_kills_tier5,config="-c tessedit_char_whitelist=0123456789")
+		time.sleep(1)
+		
+		
+		##### More Info Page Capture #####
+		image = device.screencap()
+		with open(('more_info.png'), 'wb') as f:
+					f.write(image)
+		image3 = cv2.imread('more_info.png')
+		kernel = np.ones((2, 2), np.uint8)
+		image3 = cv2.dilate(image3, kernel) 
+		roi = (1130, 443, 183, 40) #dead
+		im_dead = image3[int(roi[1]):int(roi[1]+roi[3]), int(roi[0]):int(roi[0]+roi[2])]
+		roi = (1130, 668, 183, 40) #rss assistance
+		im_rss_assistance = image3[int(roi[1]):int(roi[1]+roi[3]), int(roi[0]):int(roi[0]+roi[2])]
+		
+		#2nd check for deads with more filters to avoid some errors
+		roi = (1130, 443, 183, 40) #dead
+		thresh = 127
+		thresh_image = cv2.threshold(image3, thresh, 255, cv2.THRESH_BINARY)[1]
+		im_dead2 = thresh_image[int(roi[1]):int(roi[1]+roi[3]), int(roi[0]):int(roi[0]+roi[2])]
+		roi = (1130, 668, 183, 40) #rss assistance
+		im_rss_assistance2 = thresh_image[int(roi[1]):int(roi[1]+roi[3]), int(roi[0]):int(roi[0]+roi[2])]
+		
+		#3rd check for deads with more filters to avoid some errors
+		roi = (1130, 443, 183, 40) #dead
+		blur_img = cv2.GaussianBlur(image3, (3, 3), 0)
+		im_dead3 = blur_img[int(roi[1]):int(roi[1]+roi[3]), int(roi[0]):int(roi[0]+roi[2])]
+		roi = (1130, 668, 183, 40) #rss assistance
+		im_rss_assistance3 = blur_img[int(roi[1]):int(roi[1]+roi[3]), int(roi[0]):int(roi[0]+roi[2])]
+		
+		##### More info page OCR #####
+		gov_dead = read_ocr(im_dead)
+		gov_dead2 = read_ocr(im_dead2)
+		gov_dead3 = read_ocr(im_dead3)
+		gov_rss_assistance = read_ocr(im_rss_assistance)
+		gov_rss_assistance2 = read_ocr(im_rss_assistance2)
+		gov_rss_assistance3 = read_ocr(im_rss_assistance3)
+		
+		
+		##### Alliance tag #####
+		gray = cv2.cvtColor(im_alliance_tag,cv2.COLOR_BGR2GRAY)
+		threshold_img = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)[1]
+		alliance_tag = pytesseract.image_to_string(threshold_img)
+		
+		
+		#Just to check the progress, printing in cmd the result for each governor
+		if gov_power == '':
+			gov_power = 'Unknown'
+		if gov_killpoints =='':
+			gov_killpoints = 'Unknown'
+		if gov_dead == '' :
+			if gov_dead2 == '':
+				if gov_dead3 =='':
+					gov_dead = 'Unknown'
+				else:			
+					gov_dead = gov_dead3
+			else:
+				gov_dead = gov_dead2
+		if gov_kills_tier1 == '' :
+			gov_kills_tier1 = 'Unknown\n'
+		if gov_kills_tier2 == '' :
+			gov_kills_tier2 = 'Unknown\n'
+		if gov_kills_tier3 == '' :
+			gov_kills_tier3 = 'Unknown\n'
+		if gov_kills_tier4 == '' :
+			gov_kills_tier4 = 'Unknown\n'
+		if gov_kills_tier5 == '' :
+			gov_kills_tier5 = 'Unknown\n'
+		if gov_rss_assistance == '' :
+			if gov_rss_assistance2 =='':
+				if gov_rss_assistance3 =='':
+					gov_rss_assistance = 'Unknown'
+				else: 
+					gov_rss_assistance = gov_rss_assistance3
+			else:
+				gov_rss_assistance= gov_rss_assistance2
+
+		print('Governor ID: ' + str(gov_id) + '\nGovernor Name: ' + gov_name + '\nGovernor Power: ' + str(gov_power) + '\nGovernor Killpoints: ' + str(gov_killpoints) + '\nTier 1 kills: ' + str(gov_kills_tier1) + 'Tier 2 kills: ' + str(gov_kills_tier2) + 'Tier 3 kills: ' + str(gov_kills_tier3) + 'Tier 4 kills: ' +  str(gov_kills_tier4) + 'Tier 5 kills: ' + str(gov_kills_tier5) + 'Governor Dead Troops: ' + str(gov_dead) + '\nGovernor RSS Assistance: ' + str(gov_rss_assistance) +'\nAlliance: ' + str(alliance_tag) + '\n') 
+		device.shell(f'input tap 1396 58') #close more info
+		time.sleep(0.5)
+		device.shell(f'input tap 1365 104') #close governor info
+		time.sleep(1)
+
+		#Write results in excel file
+		sheet1.write(i+1-j, 0, gov_name)
+		sheet1.write(i+1-j, 1, tointcheck(gov_id))
+		sheet1.write(i+1-j, 2, tointcheck(gov_power))
+		sheet1.write(i+1-j, 3, tointcheck(gov_killpoints))
+		sheet1.write(i+1-j, 4, tointcheck(gov_dead))
+		sheet1.write(i+1-j, 5, tointcheck(gov_kills_tier1))
+		sheet1.write(i+1-j, 6, tointcheck(gov_kills_tier2))
+		sheet1.write(i+1-j, 7, tointcheck(gov_kills_tier3))
+		sheet1.write(i+1-j, 8, tointcheck(gov_kills_tier4))
+		sheet1.write(i+1-j, 9, tointcheck(gov_kills_tier5))
+		sheet1.write(i+1-j, 10, tointcheck(gov_rss_assistance))
+		sheet1.write(i+1-j, 11, alliance_tag)
+except:
+	print('An issue has occured. Please rerun the tool and use "resume scan option" from where tool stopped. If issue seems to remain, please contact me on discord!')
 #Save the excel file in the following format e.g. TOP300-2021-12-25-1253.xls or NEXT300-2021-12-25-1253.xls
+	continue
+
+
 if resume_scanning :
 	file_name_prefix = 'NEXT'
 else:
