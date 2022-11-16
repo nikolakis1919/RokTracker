@@ -1,5 +1,5 @@
 # RokTracker
-Open Source Rise of Kingdoms Stats Management Tool. Track TOP (50-975) Players in Power/KillPoints. Creates a .xls file with in-game Id, Power, Kill Points, T1/T2/T3/T4/T5 Kills, Dead troops, RSS Assistance.
+Open Source Rise of Kingdoms Stats Management Tool. Track TOP (50-975) Players in Power/KillPoints. Creates a .xls file with in-game Id, Power, Kill Points, T1/T2/T3/T4/T5 Kills, Dead troops, RSS Assistance, Alliance !NEW FEATURE!.
 
 # Required
 1. Bluestacks 5 Installation
