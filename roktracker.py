@@ -171,8 +171,6 @@ def onkeypress(event):
 keyboard.on_press(onkeypress)
 
 
-
-
 try:
 	for i in range(j,search_range):
 		if stop:
@@ -192,7 +190,7 @@ try:
 		gov_rss_assistance = 0
 		#Open governor
 		device.shell(f'input tap 690 ' + str(Y[k]))
-		time.sleep(2)
+		time.sleep(1.5)
 		
 		##### Ensure that governor tab is open #####
 		gov_info = False
@@ -218,7 +216,7 @@ try:
 		
 		#nickname copy
 		device.shell(f'input tap 690 283')
-		time.sleep(1.5)
+		time.sleep(2)
 		
 		##### Governor main page capture #####
 		image = device.screencap()
@@ -226,7 +224,8 @@ try:
 					f.write(image)
 		image = cv2.imread('gov_info.png')
 		#Power and Killpoints
-		roi = (642, 230, 258, 38)
+		# roi = (642, 230, 258, 38) 
+		roi = (788, 230, 200, 38)
 		im_gov_id = image[int(roi[1]):int(roi[1]+roi[3]), int(roi[0]):int(roi[0]+roi[2])]
 		image = cv2.imread('gov_info.png')
 		kernel = np.ones((2, 2), np.uint8)
@@ -356,7 +355,7 @@ try:
 			else:
 				gov_rss_assistance= gov_rss_assistance2
 
-		print('Governor ID: ' + str(gov_id) + '\nGovernor Name: ' + gov_name + '\nGovernor Power: ' + str(gov_power) + '\nGovernor Killpoints: ' + str(gov_killpoints) + '\nTier 1 kills: ' + str(gov_kills_tier1) + 'Tier 2 kills: ' + str(gov_kills_tier2) + 'Tier 3 kills: ' + str(gov_kills_tier3) + 'Tier 4 kills: ' +  str(gov_kills_tier4) + 'Tier 5 kills: ' + str(gov_kills_tier5) + 'Governor Dead Troops: ' + str(gov_dead) + '\nGovernor RSS Assistance: ' + str(gov_rss_assistance) +'\nAlliance: ' + str(alliance_tag) + '\n') 
+		print('Governor ID: ' + str(gov_id) + '\nGovernor Name: ' + gov_name + '\nGovernor Power: ' + str(f'{int(gov_power):,}') + '\nGovernor Killpoints: ' + str(f'{int(gov_killpoints):,}') + '\nTier 1 kills: ' + str(f'{int(gov_kills_tier1):,}') + '\nTier 2 kills: ' + str(f'{int(gov_kills_tier2):,}') + '\nTier 3 kills: ' + str(f'{int(gov_kills_tier3):,}') + '\nTier 4 kills: ' +  str(f'{int(gov_kills_tier4):,}') + '\nTier 5 kills: ' +str(f'{int(gov_kills_tier5):,}') + '\nGovernor Dead Troops: ' + str(f'{int(gov_dead):,}') + '\nGovernor RSS Assistance: ' + str(f'{int(gov_rss_assistance):,}') +'\nAlliance: ' + str(alliance_tag) + '\n') 
 		device.shell(f'input tap 1396 58') #close more info
 		time.sleep(0.5)
 		device.shell(f'input tap 1365 104') #close governor info
