@@ -226,7 +226,7 @@ try:
 					f.write(image)
 		image = cv2.imread('gov_info.png')
 		#Power and Killpoints
-		roi = (779, 230, 200, 35)
+		roi = (774, 230, 200, 35)
 		im_gov_id = image[int(roi[1]):int(roi[1]+roi[3]), int(roi[0]):int(roi[0]+roi[2])]
 		image = cv2.imread('gov_info.png')
 		kernel = np.ones((2, 2), np.uint8)
