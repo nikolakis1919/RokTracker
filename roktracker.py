@@ -255,19 +255,19 @@ try:
 					f.write(image)
 		image2 = cv2.imread('kills_tier.png') 	
 		image2 = cv2.fastNlMeansDenoisingColored(image2,None,20,20,7,21) 
-		roi = (863, 466, 215, 26) #tier 1
+		roi = (863, 467, 215, 26) #tier 1
 		im_kills_tier1 = image2[int(roi[1]):int(roi[1]+roi[3]), int(roi[0]):int(roi[0]+roi[2])]
 
-		roi = (863, 511, 215, 26) #tier 2
+		roi = (863, 510, 215, 26) #tier 2
 		im_kills_tier2 = image2[int(roi[1]):int(roi[1]+roi[3]), int(roi[0]):int(roi[0]+roi[2])]
 
-		roi = (863, 556, 215, 26) #tier 3
+		roi = (863, 555, 215, 26) #tier 3
 		im_kills_tier3 = image2[int(roi[1]):int(roi[1]+roi[3]), int(roi[0]):int(roi[0]+roi[2])]
 
-		roi = (863, 601, 215, 26) #tier 4
+		roi = (863, 597, 215, 26) #tier 4
 		im_kills_tier4 = image2[int(roi[1]):int(roi[1]+roi[3]), int(roi[0]):int(roi[0]+roi[2])]
 
-		roi = (863, 646, 215, 26) #tier 5
+		roi = (863, 642, 215, 26) #tier 5
 		im_kills_tier5 = image2[int(roi[1]):int(roi[1]+roi[3]), int(roi[0]):int(roi[0]+roi[2])]
 
 		#More info tab
