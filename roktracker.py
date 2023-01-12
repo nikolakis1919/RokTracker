@@ -17,13 +17,19 @@ from neural_network import read_ocr
 import requests
 import webbrowser
 
-version = "RokTracker-v7.2"
+version = "RokTracker-v7.3"
 def tointcheck(element):
 	try:
 		return int(element)
 	except ValueError:
 		return element
-	
+		
+def tointprint(element):
+	try:
+		return str(f'{int(element):,}')
+	except ValueError:
+		return str(element)
+
 #Initiliaze paths and variables
 today = date.today()
 
@@ -226,7 +232,7 @@ try:
 					f.write(image)
 		image = cv2.imread('gov_info.png')
 		#Power and Killpoints
-		roi = (774, 230, 200, 35)
+		roi = (770, 230, 200, 35)
 		im_gov_id = image[int(roi[1]):int(roi[1]+roi[3]), int(roi[0]):int(roi[0]+roi[2])]
 		image = cv2.imread('gov_info.png')
 		kernel = np.ones((2, 2), np.uint8)
@@ -355,7 +361,7 @@ try:
 					gov_rss_assistance = gov_rss_assistance3
 			else:
 				gov_rss_assistance= gov_rss_assistance2
-		print('Governor ID: ' + str(gov_id) + '\nGovernor Name: ' + gov_name + '\nGovernor Power: ' + str(f'{int(gov_power):,}') + '\nGovernor Killpoints: ' + str(f'{int(gov_killpoints):,}') + '\nTier 1 kills: ' + str(f'{int(gov_kills_tier1):,}') + '\nTier 2 kills: ' + str(f'{int(gov_kills_tier2):,}') + '\nTier 3 kills: ' + str(f'{int(gov_kills_tier3):,}') + '\nTier 4 kills: ' +  str(f'{int(gov_kills_tier4):,}') + '\nTier 5 kills: ' +str(f'{int(gov_kills_tier5):,}') + '\nGovernor Dead Troops: ' + str(f'{int(gov_dead):,}') + '\nGovernor RSS Assistance: ' + str(f'{int(gov_rss_assistance):,}') +'\nAlliance: ' + str(alliance_tag) + '\n') 
+		print('Governor ID: ' + str(gov_id) + '\nGovernor Name: ' + gov_name + '\nGovernor Power: ' + tointprint(gov_power) + '\nGovernor Killpoints: ' + tointprint(gov_killpoints) + '\nTier 1 kills: ' + tointprint(gov_kills_tier1) + '\nTier 2 kills: ' + tointprint(gov_kills_tier2) + '\nTier 3 kills: ' + tointprint(gov_kills_tier3) + '\nTier 4 kills: ' + tointprint(gov_kills_tier4) + '\nTier 5 kills: ' + tointprint(gov_kills_tier5) + '\nGovernor Dead Troops: ' + tointprint(gov_dead) + '\nGovernor RSS Assistance: ' + tointprint(gov_rss_assistance) +'\nAlliance: ' + str(alliance_tag) + '\n')
 		device.shell(f'input tap 1396 58') #close more info
 		time.sleep(0.5)
 		device.shell(f'input tap 1365 104') #close governor info
@@ -376,7 +382,7 @@ try:
 		sheet1.write(i+1-j, 11, alliance_tag)
 except:
 	print('An issue has occured. Please rerun the tool and use "resume scan option" from where tool stopped. If issue seems to remain, please contact me on discord!')
-#Save the excel file in the following format e.g. TOP300-2021-12-25-1253.xls or NEXT300-2021-12-25-1253.xls
+	#Save the excel file in the following format e.g. TOP300-2021-12-25-1253.xls or NEXT300-2021-12-25-1253.xls
 	pass
 
 
