@@ -16,6 +16,7 @@ import keyboard
 from neural_network import read_ocr
 import requests
 import webbrowser
+import traceback
 
 version = "RokTracker-v7.3"
 def tointcheck(element):
@@ -260,7 +261,7 @@ try:
 		with open(('kills_tier.png'), 'wb') as f:
 					f.write(image)
 		image2 = cv2.imread('kills_tier.png') 	
-		image2 = cv2.fastNlMeansDenoisingColored(image2,None,20,20,7,21) 
+		image2 = cv2.fastNlMeansDenoisingColored(image2,None,20,20,7,3) 
 		roi = (863, 466, 215, 26) #tier 1
 		im_kills_tier1 = image2[int(roi[1]):int(roi[1]+roi[3]), int(roi[0]):int(roi[0]+roi[2])]
 
@@ -383,6 +384,7 @@ try:
 except:
 	print('An issue has occured. Please rerun the tool and use "resume scan option" from where tool stopped. If issue seems to remain, please contact me on discord!')
 	#Save the excel file in the following format e.g. TOP300-2021-12-25-1253.xls or NEXT300-2021-12-25-1253.xls
+	traceback.print_exc()
 	pass
 
 
