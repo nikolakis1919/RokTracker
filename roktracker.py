@@ -18,7 +18,7 @@ import requests
 import webbrowser
 import traceback
 
-version = "RokTracker-v8.0"
+version = "RokTracker-v8.1"
 def tointcheck(element):
 	try:
 		return int(element)
@@ -239,9 +239,9 @@ try:
 		kernel = np.ones((2, 2), np.uint8)
 	 
 		image = cv2.dilate(image, kernel) 
-		roi = (874, 328, 224, 44)
+		roi = (874, 327, 224, 40)
 		im_gov_power = image[int(roi[1]):int(roi[1]+roi[3]), int(roi[0]):int(roi[0]+roi[2])]
-		roi = (1106, 333, 222, 33)
+		roi = (1106, 327, 224, 40)
 		im_gov_killpoints = image[int(roi[1]):int(roi[1]+roi[3]), int(roi[0]):int(roi[0]+roi[2])]
 		gov_name = tk.Tk().clipboard_get()
 
@@ -263,29 +263,29 @@ try:
 		gov_killpoints = read_ocr(im_gov_killpoints)
 		gov_killpoints2 = pytesseract.image_to_string(im_gov_killpoints,config="-c tessedit_char_whitelist=0123456789")
 		gov_power2 = pytesseract.image_to_string(im_gov_power,config="-c tessedit_char_whitelist=0123456789")
-		gov_killpoints = gov_killpoints2 if (len(str(gov_killpoints2))-1 > len(str(gov_killpoints))) else gov_killpoints
-		gov_power = gov_power2 if (len(str(gov_power2))-1 > len(str(gov_killpoints))) else gov_power
+		gov_killpoints = gov_killpoints2 if (len(''.join(str(gov_killpoints).split()))-1 > len(str(gov_killpoints))) else gov_killpoints
+		gov_power = gov_power2 if (len(''.join(str(gov_power2).split()))-1 > len(str(gov_power))) else gov_power
 
 
 		##### Kill tier Capture #####
 		image = device.screencap()
 		with open(('kills_tier.png'), 'wb') as f:
 					f.write(image)
-		image2 = cv2.imread('kills_tier.png') 	
-		image2 = cv2.fastNlMeansDenoisingColored(image2,None,20,20,7,3) 
-		roi = (863, 421, 215, 26) #tier 1
+		image2 = cv2.imread('kills_tier.png')
+		image2 = cv2.fastNlMeansDenoisingColored(image2,None,20,20,7,3)
+		roi = (862, 430, 215, 26) #tier 1
 		im_kills_tier1 = image2[int(roi[1]):int(roi[1]+roi[3]), int(roi[0]):int(roi[0]+roi[2])]
 
-		roi = (863, 466, 215, 26) #tier 2
+		roi = (862, 475, 215, 26) #tier 2
 		im_kills_tier2 = image2[int(roi[1]):int(roi[1]+roi[3]), int(roi[0]):int(roi[0]+roi[2])]
 
-		roi = (863, 511, 215, 26) #tier 3
+		roi = (862, 516, 215, 26) #tier 3
 		im_kills_tier3 = image2[int(roi[1]):int(roi[1]+roi[3]), int(roi[0]):int(roi[0]+roi[2])]
 
-		roi = (863, 556, 215, 26) #tier 4
+		roi = (862, 561, 215, 26) #tier 4
 		im_kills_tier4 = image2[int(roi[1]):int(roi[1]+roi[3]), int(roi[0]):int(roi[0]+roi[2])]
 
-		roi = (863, 601, 215, 26) #tier 5
+		roi = (862, 606, 215, 26) #tier 5
 		im_kills_tier5 = image2[int(roi[1]):int(roi[1]+roi[3]), int(roi[0]):int(roi[0]+roi[2])]
 
 		#More info tab
