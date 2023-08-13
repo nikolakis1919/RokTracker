@@ -266,7 +266,7 @@ try:
 		gov_killpoints = gov_killpoints2 if (len(''.join(str(gov_killpoints).split()))-1 > len(str(gov_killpoints))) else gov_killpoints
 		gov_power = gov_power2 if (len(''.join(str(gov_power2).split()))-1 > len(str(gov_power))) else gov_power
 
-
+		time.sleep(1)
 		##### Kill tier Capture #####
 		image = device.screencap()
 		with open(('kills_tier.png'), 'wb') as f:
