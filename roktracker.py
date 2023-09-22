@@ -199,7 +199,7 @@ try:
 		gov_rss_assistance = 0
 		#Open governor
 		device.shell(f'input tap 690 ' + str(Y[k]))
-		time.sleep(2)
+		time.sleep(1.8)
 		
 		##### Ensure that governor tab is open #####
 		gov_info = False
@@ -225,7 +225,7 @@ try:
 		
 		#nickname copy
 		device.shell(f'input tap 654 245')
-		time.sleep(1.5)
+		time.sleep(1.3)
 		
 		##### Governor main page capture #####
 		image = device.screencap()
@@ -236,9 +236,6 @@ try:
 		roi = (733, 192, 200, 35)
 		im_gov_id = image[int(roi[1]):int(roi[1]+roi[3]), int(roi[0]):int(roi[0]+roi[2])]
 		image = cv2.imread('gov_info.png')
-		kernel = np.ones((2, 2), np.uint8)
-	 
-		image = cv2.dilate(image, kernel) 
 		roi = (874, 327, 224, 40)
 		im_gov_power = image[int(roi[1]):int(roi[1]+roi[3]), int(roi[0]):int(roi[0]+roi[2])]
 		roi = (1106, 327, 224, 40)
@@ -256,13 +253,13 @@ try:
 		
 		#kills tier
 		device.shell(f'input tap 1118 314')
-		
+        
 		#1st image OCR
 		gov_id = read_ocr(im_gov_id)
-		gov_power = read_ocr(im_gov_power)
-		gov_killpoints = read_ocr(im_gov_killpoints)
 		gov_killpoints2 = pytesseract.image_to_string(im_gov_killpoints,config="-c tessedit_char_whitelist=0123456789")
 		gov_power2 = pytesseract.image_to_string(im_gov_power,config="-c tessedit_char_whitelist=0123456789")
+		gov_power = read_ocr(im_gov_power)
+		gov_killpoints = read_ocr(im_gov_killpoints)
 		gov_killpoints = gov_killpoints2 if (len(''.join(str(gov_killpoints).split()))-1 > len(str(gov_killpoints))) else gov_killpoints
 		gov_power = gov_power2 if (len(''.join(str(gov_power2).split()))-1 > len(str(gov_power))) else gov_power
 
@@ -273,6 +270,7 @@ try:
 					f.write(image)
 		image2 = cv2.imread('kills_tier.png')
 		image2 = cv2.fastNlMeansDenoisingColored(image2,None,20,20,7,3)
+		_,image2 = cv2.threshold(image2,180,255,cv2.THRESH_BINARY)
 		roi = (862, 430, 215, 26) #tier 1
 		im_kills_tier1 = image2[int(roi[1]):int(roi[1]+roi[3]), int(roi[0]):int(roi[0]+roi[2])]
 
@@ -306,7 +304,7 @@ try:
 					f.write(image)
 		image3 = cv2.imread('more_info.png')
 		kernel = np.ones((2, 2), np.uint8)
-		image3 = cv2.dilate(image3, kernel) 
+		image3 = cv2.dilate(image3, kernel)
 		roi = (1130, 443, 183, 40) #dead
 		im_dead = image3[int(roi[1]):int(roi[1]+roi[3]), int(roi[0]):int(roi[0]+roi[2])]
 		roi = (1130, 668, 183, 40) #rss assistance
