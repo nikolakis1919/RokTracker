@@ -18,7 +18,7 @@ import requests
 import webbrowser
 import traceback
 
-version = "RokTracker-v8.2"
+version = "RokTracker-v8.3"
 def tointcheck(element):
 	try:
 		return int(element)
