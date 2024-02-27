@@ -19,7 +19,7 @@ Everything should be like this and no more emulators should be running concurren
 # Important Notes
 1. Every requirement that tracker needs in order to run, will be installed automatically, by running the .bat file.
 2. You must run the .bat file without administration privileges.
-3. Change the installation path of Tesseract in .py file if your path is different. Open this file with your notepad and change the path to yours at 18th line of code. My path is C:\Program Files\Tesseract-OCR\tesseract.exe
+3. Change the installation path of Tesseract in .py file if your path is different. Open this file with your notepad and change the path to yours at 37th line of code. My path is C:\Program Files\Tesseract-OCR\tesseract.exe
 4. Platform tools folder should be extracted as a folder inside the Tracker's folder. Like the following image
 ![image](https://user-images.githubusercontent.com/96141261/191936152-f0fbd0c0-a026-48d0-bd1e-07947e2805bd.png)
 5. In order to get only your kingdoms ranks, the character that is currently logged in game must be in HOME KINGDOM, else you will get all the players in your KvK including players from different kingdoms.
