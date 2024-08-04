@@ -35,9 +35,9 @@ Everything should be like this and no more emulators should be running concurren
 15. V2.0 New Added Feature. With \ button you can terminate the scan, saving current progress to .xls file. It will scan the current scanning governor and it won't continue to the next. Appropriate messages will appear in CMD.
 
 # Contact and Support
-Any bugs that you may find or any suggestions you may have, please feel free to contact me in my discord: nikos#4469\
+Any bugs that you may find or any suggestions you may have, please feel free to contact me in my discord: nikos#4469 or join the [discord server](https://discord.gg/CvU96gVfjS).\
 If you like what i created, you can always support me.\
-https://www.paypal.com/donate/?hosted_button_id=55G95MNYPVX72
+[Buy me a coffee](https://buymeacoffee.com/nikolakis1919)
 
 # Usage
 Options Screen. Here you can select the amount of players you want to scan and your kingdom. \
