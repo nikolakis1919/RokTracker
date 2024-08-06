@@ -252,14 +252,14 @@ def main_loop(device, sheet1):
             kills_tiers = []
             for y in range(430, 630, 45):
                 kills_tiers_image = preprocess_image('kills_tier.png', (862, y, 215, 26))
-                kills_tiers.append(read_ocr_from_image(kills_tiers_image, "-c tessedit_char_whitelist=0123456789"))
+                kills_tiers.append(read_ocr_from_image(kills_tiers_image, "--psm 6 -c tessedit_char_whitelist=0123456789"))
 
             capture_image(device, 'more_info.png')
             gov_dead_image = preprocess_image('more_info.png', (1130, 443, 183, 40))
-            gov_dead = read_ocr_from_image(gov_dead_image, "-c tessedit_char_whitelist=0123456789")
+            gov_dead = read_ocr_from_image(gov_dead_image, "--psm 6 -c tessedit_char_whitelist=0123456789")
 
             gov_rss_assistance_image = preprocess_image('more_info.png', (1130, 668, 183, 40))
-            gov_rss_assistance = read_ocr_from_image(gov_rss_assistance_image, "-c tessedit_char_whitelist=0123456789")
+            gov_rss_assistance = read_ocr_from_image(gov_rss_assistance_image, "--psm 6 -c tessedit_char_whitelist=0123456789")
 
             device.shell(f'input tap 1396 58') #close more info
             
