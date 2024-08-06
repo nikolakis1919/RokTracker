@@ -15,7 +15,7 @@ from tkinter import messagebox
 import xlwt
 import keyboard
 
-version = "RokTracker-v9.2"
+version = "RokTracker-v9.3"
 pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
 
 today = date.today()
