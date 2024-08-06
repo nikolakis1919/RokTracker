@@ -15,7 +15,7 @@ from tkinter import messagebox
 import xlwt
 import keyboard
 
-version = "RokTracker-v9.1"
+version = "RokTracker-v9.2"
 pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
 
 today = date.today()
@@ -256,10 +256,10 @@ def main_loop(device, sheet1):
 
             capture_image(device, 'more_info.png')
             gov_dead_image = preprocess_image('more_info.png', (1130, 443, 183, 40))
-            gov_dead = read_ocr_from_image(gov_dead_image)
+            gov_dead = read_ocr_from_image(gov_dead_image, "-c tessedit_char_whitelist=0123456789")
 
             gov_rss_assistance_image = preprocess_image('more_info.png', (1130, 668, 183, 40))
-            gov_rss_assistance = read_ocr_from_image(gov_rss_assistance_image)
+            gov_rss_assistance = read_ocr_from_image(gov_rss_assistance_image, "-c tessedit_char_whitelist=0123456789")
 
             device.shell(f'input tap 1396 58') #close more info
             
