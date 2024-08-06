@@ -15,7 +15,7 @@ from tkinter import messagebox
 import xlwt
 import keyboard
 
-version = "RokTracker-v9.0"
+version = "RokTracker-v9.1"
 pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
 
 today = date.today()
@@ -216,7 +216,7 @@ def main_loop(device, sheet1):
                     break
                 device.shell(f'input swipe 690 605 690 540')
                 device.shell(f'input tap 690 {Y[k]}')
-                time.sleep(1)
+                time.sleep(1.5)
             #copy nickname
             device.shell(f'input tap 654 245')
             gov_id_image = preprocess_image2('check_more_info.png', (733, 192, 200, 35))
@@ -228,6 +228,7 @@ def main_loop(device, sheet1):
             device.shell(f'input tap 1226 486')
             gov_killpoints_image = preprocess_image2('check_more_info.png', (1106, 327, 224, 40))
             gov_killpoints = read_ocr_from_image(gov_killpoints_image, "-c tessedit_char_whitelist=0123456789")
+            time.sleep(0.5)
             capture_image(device, 'kvk_stats.png')
             gov_kills_high_image = preprocess_image('kvk_stats.png', (1000, 400, 165, 50))
             gov_kills_high = read_ocr_from_image(gov_kills_high_image, "--psm 6 -c tessedit_char_whitelist=0123456789")
@@ -266,6 +267,7 @@ def main_loop(device, sheet1):
             
             # Update progress bar
             print_progress_bar(i + 1 - j, search_range)
+            time.sleep(0.5)
             device.shell(f'input tap 1365 104') #close governor info
             # Write data to Excel
             sheet1.write(i + 1, 0, gov_name)
@@ -283,7 +285,7 @@ def main_loop(device, sheet1):
             sheet1.write(i + 1, 12, tointcheck(gov_kills_high))
             sheet1.write(i + 1, 13, tointcheck(gov_deads_high))
             sheet1.write(i + 1, 14, tointcheck(gov_sevs_high))
-            time.sleep(0.4)
+            time.sleep(1)
 
     except:
         print('An issue has occured. Please rerun the tool and use "resume scan option" from where tool stopped. If issue seems to remain, please contact me on discord!')
