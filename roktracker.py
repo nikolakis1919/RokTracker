@@ -15,7 +15,7 @@ from tkinter import messagebox
 import xlwt
 import keyboard
 
-version = "RokTracker-v9.3"
+version = "RokTracker-v9.4"
 pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
 
 today = date.today()
@@ -136,7 +136,6 @@ def preprocess_image(filename, roi):
     gray_image = cv2.cvtColor(cropped_image, cv2.COLOR_BGR2GRAY)
     
     # Improved preprocessing for better OCR accuracy
-    gray_image = cv2.medianBlur(gray_image, 3)
     _, binary_image = cv2.threshold(gray_image, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
     
     return binary_image
@@ -163,7 +162,6 @@ def preprocess_image2(filename, roi):
     gray_image = cv2.cvtColor(cropped_image, cv2.COLOR_BGR2GRAY)
     
     # Improved preprocessing for better OCR accuracy
-    gray_image = cv2.medianBlur(gray_image, 3)
     _, binary_image = cv2.threshold(gray_image, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)
     
     return binary_image
@@ -206,7 +204,7 @@ def main_loop(device, sheet1):
 
             k = min(i, 4)
             device.shell(f'input tap 690 {Y[k]}')
-            time.sleep(1)
+            time.sleep(1.5)
 
             # Open governor and ensure the tab is open
             for _ in range(5):
@@ -225,6 +223,7 @@ def main_loop(device, sheet1):
 
             gov_name = tk.Tk().clipboard_get()
             #read kvk stats
+            time.sleep(0.5)
             device.shell(f'input tap 1226 486')
             gov_killpoints_image = preprocess_image2('check_more_info.png', (1106, 327, 224, 40))
             gov_killpoints = read_ocr_from_image(gov_killpoints_image, "-c tessedit_char_whitelist=0123456789")
@@ -232,10 +231,12 @@ def main_loop(device, sheet1):
             capture_image(device, 'kvk_stats.png')
             gov_kills_high_image = preprocess_image('kvk_stats.png', (1000, 400, 165, 50))
             gov_kills_high = read_ocr_from_image(gov_kills_high_image, "--psm 6 -c tessedit_char_whitelist=0123456789")
-            
+            time.sleep(1)
+
             for _ in range(2):
                 device.shell(f'input tap 1118 314')
-            
+                time.sleep(1)
+
             gov_power_image = preprocess_image2('check_more_info.png', (874, 327, 224, 40))
             gov_power = read_ocr_from_image(gov_power_image, "--psm 6 -c tessedit_char_whitelist=0123456789")
             alliance_tag_image = preprocess_image('check_more_info.png', (598, 331, 250, 40))
@@ -249,6 +250,7 @@ def main_loop(device, sheet1):
 
             capture_image(device, 'kills_tier.png')
             device.shell(f'input tap 350 740')
+            time.sleep(0.5)
             kills_tiers = []
             for y in range(430, 630, 45):
                 kills_tiers_image = preprocess_image('kills_tier.png', (862, y, 215, 26))
@@ -270,22 +272,22 @@ def main_loop(device, sheet1):
             time.sleep(0.5)
             device.shell(f'input tap 1365 104') #close governor info
             # Write data to Excel
-            sheet1.write(i + 1, 0, gov_name)
-            sheet1.write(i + 1, 1, tointcheck(gov_id))
-            sheet1.write(i + 1, 2, tointcheck(gov_power))
-            sheet1.write(i + 1, 3, tointcheck(gov_killpoints))
-            sheet1.write(i + 1, 4, tointcheck(gov_dead))
-            sheet1.write(i + 1, 5, tointcheck(kills_tiers[0]))
-            sheet1.write(i + 1, 6, tointcheck(kills_tiers[1]))
-            sheet1.write(i + 1, 7, tointcheck(kills_tiers[2]))
-            sheet1.write(i + 1, 8, tointcheck(kills_tiers[3]))
-            sheet1.write(i + 1, 9, tointcheck(kills_tiers[4]))
-            sheet1.write(i + 1, 10, tointcheck(gov_rss_assistance))
-            sheet1.write(i + 1, 11, alliance_tag)
-            sheet1.write(i + 1, 12, tointcheck(gov_kills_high))
-            sheet1.write(i + 1, 13, tointcheck(gov_deads_high))
-            sheet1.write(i + 1, 14, tointcheck(gov_sevs_high))
-            time.sleep(1)
+            sheet1.write(i - j + 1, 0, gov_name)
+            sheet1.write(i - j + 1, 1, tointcheck(gov_id))
+            sheet1.write(i - j + 1, 2, tointcheck(gov_power))
+            sheet1.write(i - j + 1, 3, tointcheck(gov_killpoints))
+            sheet1.write(i - j + 1, 4, tointcheck(gov_dead))
+            sheet1.write(i - j + 1, 5, tointcheck(kills_tiers[0]))
+            sheet1.write(i - j + 1, 6, tointcheck(kills_tiers[1]))
+            sheet1.write(i - j + 1, 7, tointcheck(kills_tiers[2]))
+            sheet1.write(i - j + 1, 8, tointcheck(kills_tiers[3]))
+            sheet1.write(i - j + 1, 9, tointcheck(kills_tiers[4]))
+            sheet1.write(i - j + 1, 10, tointcheck(gov_rss_assistance))
+            sheet1.write(i - j + 1, 11, alliance_tag)
+            sheet1.write(i - j + 1, 12, tointcheck(gov_kills_high))
+            sheet1.write(i - j + 1, 13, tointcheck(gov_deads_high))
+            sheet1.write(i - j + 1, 14, tointcheck(gov_sevs_high))
+            time.sleep(1.5)
 
     except:
         print('An issue has occured. Please rerun the tool and use "resume scan option" from where tool stopped. If issue seems to remain, please contact me on discord!')
