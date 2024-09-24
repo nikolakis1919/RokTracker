@@ -14,8 +14,9 @@ import tkinter as tk
 from tkinter import messagebox
 import xlwt
 import keyboard
+import random
 
-version = "RokTracker-v9.4"
+version = "RokTracker-v9.5"
 pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
 
 today = date.today()
@@ -104,7 +105,7 @@ def setup_excel():
     font.bold = True
     style.font = font
 
-    headers = ['Governor Name', 'Governor ID', 'Power', 'Kill Points', 'Deads', 'Tier 1 Kills', 'Tier 2 Kills', 'Tier 3 Kills', 'Tier 4 Kills', 'Tier 5 Kills', 'Rss Assistance', 'Alliance','KvK Kills High', 'KvK Deads High', 'KvK Severely Wounds High']
+    headers = ['Governor Name', 'Governor ID', 'Power', 'Kill Points', 'Deads', 'Tier 1 Kills', 'Tier 2 Kills', 'Tier 3 Kills', 'Tier 4 Kills', 'Tier 5 Kills', 'Rss Assistance', 'Alliance Helps', 'Alliance','KvK Kills High', 'KvK Deads High', 'KvK Severely Wounds High']
     for col, header in enumerate(headers):
         sheet1.write(0, col, header, style)
     return wb, sheet1
@@ -114,6 +115,21 @@ def capture_image(device, filename):
     with open(filename, 'wb') as f:
         f.write(image)
     return
+
+
+
+def randomize_time(max_time: float):
+    """
+    Pauses the program execution for a random duration between max_time and 2/3 of max_time.
+    
+    Parameters:
+    max_time (float): The maximum time in seconds.
+    """
+    lower_limit = max_time * 2 / 3
+    sleep_time = random.uniform(lower_limit, max_time)
+    time.sleep(sleep_time)
+
+
 
 def preprocess_image(filename, roi):
     """
@@ -166,6 +182,31 @@ def preprocess_image2(filename, roi):
     
     return binary_image
 
+def preprocess_image3(filename, roi):
+    """
+    Reads an image from a file, crops it based on ROI, and preprocesses it for OCR.
+    
+    Parameters:
+        filename: The path to the file containing the image.
+        roi: A tuple (x, y, width, height) representing the region of interest.
+    
+    Returns:
+        numpy.ndarray: The preprocessed binary image.
+    """
+    img = cv2.imread(filename)
+    
+    # Crop the image based on ROI
+    x, y, w, h = roi
+    cropped_image = img[y:y+h, x:x+w]
+    
+    # Convert to grayscale
+    gray_image = cv2.cvtColor(cropped_image, cv2.COLOR_BGR2GRAY)
+    
+    gray_image = cv2.medianBlur(gray_image, 3)
+    _, binary_image = cv2.threshold(gray_image, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)
+    
+    return binary_image
+
 def read_ocr_from_image(image, config=""):
     return pytesseract.image_to_string(image, config=config)
 
@@ -184,6 +225,12 @@ def print_progress_bar(iteration, total, bar_length=40):
     sys.stdout.write(f'\r[{arrow}{spaces}] {iteration} out of {total} Scanned\n\n')
     sys.stdout.flush()
 
+def format_time(seconds):
+    """Helper function to format time in MM:SS format."""
+    minutes = int(seconds // 60)
+    seconds = int(seconds % 60)
+    return f"{minutes:02d}:{seconds:02d}"
+
 def main_loop(device, sheet1):
     stop = False
 
@@ -197,6 +244,7 @@ def main_loop(device, sheet1):
 
     j = 4 if resume_scanning else 0
     try:
+        start_time = time.time()
         for i in range(j, search_range + j):
             if stop:
                 print("Scan Terminated! Saving the current progress...")
@@ -204,7 +252,7 @@ def main_loop(device, sheet1):
 
             k = min(i, 4)
             device.shell(f'input tap 690 {Y[k]}')
-            time.sleep(1.5)
+            randomize_time(1.3)
 
             # Open governor and ensure the tab is open
             for _ in range(5):
@@ -214,7 +262,7 @@ def main_loop(device, sheet1):
                     break
                 device.shell(f'input swipe 690 605 690 540')
                 device.shell(f'input tap 690 {Y[k]}')
-                time.sleep(1.5)
+                randomize_time(1.2)
             #copy nickname
             device.shell(f'input tap 654 245')
             gov_id_image = preprocess_image2('check_more_info.png', (733, 192, 200, 35))
@@ -223,22 +271,21 @@ def main_loop(device, sheet1):
 
             gov_name = tk.Tk().clipboard_get()
             #read kvk stats
-            time.sleep(0.5)
             device.shell(f'input tap 1226 486')
             gov_killpoints_image = preprocess_image2('check_more_info.png', (1106, 327, 224, 40))
             gov_killpoints = read_ocr_from_image(gov_killpoints_image, "-c tessedit_char_whitelist=0123456789")
-            time.sleep(0.5)
+            randomize_time(0.5)
             capture_image(device, 'kvk_stats.png')
             gov_kills_high_image = preprocess_image('kvk_stats.png', (1000, 400, 165, 50))
             gov_kills_high = read_ocr_from_image(gov_kills_high_image, "--psm 6 -c tessedit_char_whitelist=0123456789")
-            time.sleep(1)
-
-            for _ in range(2):
-                device.shell(f'input tap 1118 314')
-                time.sleep(1)
-
+            
             gov_power_image = preprocess_image2('check_more_info.png', (874, 327, 224, 40))
             gov_power = read_ocr_from_image(gov_power_image, "--psm 6 -c tessedit_char_whitelist=0123456789")
+            randomize_time(0.5)
+            for _ in range(2):
+                device.shell(f'input tap 1118 314')
+                randomize_time(0.7)
+
             alliance_tag_image = preprocess_image('check_more_info.png', (598, 331, 250, 40))
             alliance_tag = read_ocr_from_image(alliance_tag_image)
 
@@ -250,26 +297,30 @@ def main_loop(device, sheet1):
 
             capture_image(device, 'kills_tier.png')
             device.shell(f'input tap 350 740')
-            time.sleep(0.5)
+            
             kills_tiers = []
             for y in range(430, 630, 45):
                 kills_tiers_image = preprocess_image('kills_tier.png', (862, y, 215, 26))
                 kills_tiers.append(read_ocr_from_image(kills_tiers_image, "--psm 6 -c tessedit_char_whitelist=0123456789"))
-
+            randomize_time(0.5)
             capture_image(device, 'more_info.png')
-            gov_dead_image = preprocess_image('more_info.png', (1130, 443, 183, 40))
+            gov_dead_image = preprocess_image3('more_info.png', (1130, 443, 183, 40))
             gov_dead = read_ocr_from_image(gov_dead_image, "--psm 6 -c tessedit_char_whitelist=0123456789")
 
-            gov_rss_assistance_image = preprocess_image('more_info.png', (1130, 668, 183, 40))
+            gov_rss_assistance_image = preprocess_image3('more_info.png', (1130, 668, 183, 40))
             gov_rss_assistance = read_ocr_from_image(gov_rss_assistance_image, "--psm 6 -c tessedit_char_whitelist=0123456789")
 
             device.shell(f'input tap 1396 58') #close more info
             
-            print(f'Governor ID: {gov_id}Governor Name: {gov_name}\nGovernor Power: {tointprint(gov_power)}\nGovernor Killpoints: {tointprint(gov_killpoints)}\nTier 1 kills: {tointprint(kills_tiers[0])}\nTier 2 kills: {tointprint(kills_tiers[1])}\nTier 3 kills: {tointprint(kills_tiers[2])}\nTier 4 kills: {tointprint(kills_tiers[3])}\nTier 5 kills: {tointprint(kills_tiers[4])}\nGovernor Deads: {tointprint(gov_dead)}\nGovernor RSS Assistance: {tointprint(gov_rss_assistance)}\nGovernor Alliance: {alliance_tag}Governor KvK High Kill: {tointprint(gov_kills_high)}\nGovernor KvK High Deads:{tointprint(gov_deads_high)}\nGovernor KvK High Severely Wounded:{tointprint(gov_sevs_high)}')
+            gov_helps_image = preprocess_image3('more_info.png', (1148, 732, 164, 44))
+            gov_alliance_helps = read_ocr_from_image(gov_helps_image, "--psm 6 -c tessedit_char_whitelist=0123456789")
+
+            print(f'Governor ID: {gov_id}Governor Name: {gov_name}\nGovernor Power: {tointprint(gov_power)}\nGovernor Killpoints: {tointprint(gov_killpoints)}\nTier 1 kills: {tointprint(kills_tiers[0])}\nTier 2 kills: {tointprint(kills_tiers[1])}\nTier 3 kills: {tointprint(kills_tiers[2])}\nTier 4 kills: {tointprint(kills_tiers[3])}\nTier 5 kills: {tointprint(kills_tiers[4])}\nGovernor Deads: {tointprint(gov_dead)}\nGovernor RSS Assistance: {tointprint(gov_rss_assistance)}\nGovernor Alliance Helps: {tointprint(gov_alliance_helps)}\nGovernor Alliance: {alliance_tag}Governor KvK High Kill: {tointprint(gov_kills_high)}\nGovernor KvK High Deads:{tointprint(gov_deads_high)}\nGovernor KvK High Severely Wounded:{tointprint(gov_sevs_high)}')
             
             # Update progress bar
             print_progress_bar(i + 1 - j, search_range)
-            time.sleep(0.5)
+            randomize_time(0.5)
+            
             device.shell(f'input tap 1365 104') #close governor info
             # Write data to Excel
             sheet1.write(i - j + 1, 0, gov_name)
@@ -283,12 +334,26 @@ def main_loop(device, sheet1):
             sheet1.write(i - j + 1, 8, tointcheck(kills_tiers[3]))
             sheet1.write(i - j + 1, 9, tointcheck(kills_tiers[4]))
             sheet1.write(i - j + 1, 10, tointcheck(gov_rss_assistance))
-            sheet1.write(i - j + 1, 11, alliance_tag)
-            sheet1.write(i - j + 1, 12, tointcheck(gov_kills_high))
-            sheet1.write(i - j + 1, 13, tointcheck(gov_deads_high))
-            sheet1.write(i - j + 1, 14, tointcheck(gov_sevs_high))
-            time.sleep(1.5)
+            sheet1.write(i - j + 1, 11, tointcheck(gov_alliance_helps))
+            sheet1.write(i - j + 1, 12, alliance_tag)
+            sheet1.write(i - j + 1, 13, tointcheck(gov_kills_high))
+            sheet1.write(i - j + 1, 14, tointcheck(gov_deads_high))
+            sheet1.write(i - j + 1, 15, tointcheck(gov_sevs_high))
 
+            #ETA
+            elapsed_time = time.time() - start_time
+            loops_completed = i + 1 - j
+            remaining_loops = search_range - loops_completed
+            average_time_per_loop = elapsed_time / loops_completed
+            estimated_remaining_time = remaining_loops * average_time_per_loop
+            estimated_remaining_minutes = estimated_remaining_time / 60
+            print(f"Time running: {elapsed_time:.2f}s | Estimated remaining time: {estimated_remaining_minutes:.2f} mins\n")
+            print('----------------------------------------------------------------\n')
+
+
+            randomize_time(1)
+
+            
     except:
         print('An issue has occured. Please rerun the tool and use "resume scan option" from where tool stopped. If issue seems to remain, please contact me on discord!')
         #Save the excel file in the following format e.g. TOP300-2021-12-25-1253.xls or NEXT300-2021-12-25-1253.xls
