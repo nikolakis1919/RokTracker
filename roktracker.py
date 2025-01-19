@@ -16,7 +16,7 @@ import xlwt
 import keyboard
 import random
 
-version = "RokTracker-v9.5"
+version = "RokTracker-v10.0"
 pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
 
 today = date.today()
@@ -74,10 +74,10 @@ def create_input_gui():
             root.destroy()
             print("Scanning Started...")
         else:
-            print("You need to fill Kingdom number!")
+            print("You need to fill filename!")
             kingdom_entry.focus_set()
 
-    tk.Label(root, text='Kingdom', font=('calibre', 10, 'bold')).grid(row=0, column=0)
+    tk.Label(root, text='Filename', font=('calibre', 10, 'bold')).grid(row=0, column=0)
     kingdom_entry = tk.Entry(root, textvariable=variable, font=('calibre', 10, 'normal')).grid(row=0, column=1)
     tk.Label(root, text='Search Amount', font=('calibre', 10, 'bold')).grid(row=1, column=0)
     tk.OptionMenu(root, variable2, *options).grid(row=1, column=1)
@@ -257,52 +257,52 @@ def main_loop(device, sheet1):
             # Open governor and ensure the tab is open
             for _ in range(5):
                 capture_image(device, 'check_more_info.png')
-                check_more_info_image = preprocess_image('check_more_info.png', (294, 786, 116, 29))
+                check_more_info_image = preprocess_image2('check_more_info.png', (170, 775, 116, 29))
                 if 'MoreInfo' in read_ocr_from_image(check_more_info_image, "-c tessedit_char_whitelist=MoreInfo"):
                     break
                 device.shell(f'input swipe 690 605 690 540')
                 device.shell(f'input tap 690 {Y[k]}')
                 randomize_time(1.2)
             #copy nickname
-            device.shell(f'input tap 654 245')
-            gov_id_image = preprocess_image2('check_more_info.png', (733, 192, 200, 35))
+            device.shell(f'input tap 654 228')
+            gov_id_image = preprocess_image2('check_more_info.png', (720, 176, 200, 34))
             gov_id = read_ocr_from_image(gov_id_image, "-c tessedit_char_whitelist=0123456789")
 
 
             gov_name = tk.Tk().clipboard_get()
             #read kvk stats
             device.shell(f'input tap 1226 486')
-            gov_killpoints_image = preprocess_image2('check_more_info.png', (1106, 327, 224, 40))
+            gov_killpoints_image = preprocess_image2('check_more_info.png', (1120, 320, 244, 40))
             gov_killpoints = read_ocr_from_image(gov_killpoints_image, "-c tessedit_char_whitelist=0123456789")
-            randomize_time(0.5)
+            gov_power_image = preprocess_image2('check_more_info.png', (856, 320, 240, 40))
+            gov_power = read_ocr_from_image(gov_power_image, "--psm 6 -c tessedit_char_whitelist=0123456789")
+            randomize_time(0.3)
             capture_image(device, 'kvk_stats.png')
-            gov_kills_high_image = preprocess_image('kvk_stats.png', (1000, 400, 165, 50))
+            gov_kills_high_image = preprocess_image('kvk_stats.png', (1000, 380, 180, 50))
             gov_kills_high = read_ocr_from_image(gov_kills_high_image, "--psm 6 -c tessedit_char_whitelist=0123456789")
             
-            gov_power_image = preprocess_image2('check_more_info.png', (874, 327, 224, 40))
-            gov_power = read_ocr_from_image(gov_power_image, "--psm 6 -c tessedit_char_whitelist=0123456789")
-            randomize_time(0.5)
-            for _ in range(2):
-                device.shell(f'input tap 1118 314')
-                randomize_time(0.7)
-
-            alliance_tag_image = preprocess_image('check_more_info.png', (598, 331, 250, 40))
+            alliance_tag_image = preprocess_image('check_more_info.png', (580, 320, 250, 40))
             alliance_tag = read_ocr_from_image(alliance_tag_image)
 
-            gov_deads_high_image = preprocess_image('kvk_stats.png', (1000, 480 , 199, 35))
+            gov_deads_high_image = preprocess_image('kvk_stats.png', (1020, 460 , 200, 35))
             gov_deads_high = read_ocr_from_image(gov_deads_high_image, "-c tessedit_char_whitelist=0123456789")
 
-            gov_sevs_high_image = preprocess_image('kvk_stats.png', (1000, 530 , 199, 35))
-            gov_sevs_high = read_ocr_from_image(gov_sevs_high_image, "-c tessedit_char_whitelist=0123456789")
+            for _ in range(2):
+                randomize_time(0.6)
+                device.shell(f'input tap 1174 304')
+                
 
+            gov_sevs_high_image = preprocess_image('kvk_stats.png', (1020, 510 , 200, 35))
+            gov_sevs_high = read_ocr_from_image(gov_sevs_high_image, "-c tessedit_char_whitelist=0123456789")
+            randomize_time(0.2)
             capture_image(device, 'kills_tier.png')
-            device.shell(f'input tap 350 740')
+            device.shell(f'input tap 226 724')
             
             kills_tiers = []
-            for y in range(430, 630, 45):
-                kills_tiers_image = preprocess_image('kills_tier.png', (862, y, 215, 26))
+            for y in range(420, 620, 45):
+                kills_tiers_image = preprocess_image('kills_tier.png', (916, y, 215, 26))
                 kills_tiers.append(read_ocr_from_image(kills_tiers_image, "--psm 6 -c tessedit_char_whitelist=0123456789"))
-            randomize_time(0.5)
+            randomize_time(0.3)
             capture_image(device, 'more_info.png')
             gov_dead_image = preprocess_image3('more_info.png', (1130, 443, 183, 40))
             gov_dead = read_ocr_from_image(gov_dead_image, "--psm 6 -c tessedit_char_whitelist=0123456789")
@@ -319,9 +319,9 @@ def main_loop(device, sheet1):
             
             # Update progress bar
             print_progress_bar(i + 1 - j, search_range)
-            randomize_time(0.5)
+            randomize_time(0.3)
             
-            device.shell(f'input tap 1365 104') #close governor info
+            device.shell(f'input tap 1453 88') #close governor info
             # Write data to Excel
             sheet1.write(i - j + 1, 0, gov_name)
             sheet1.write(i - j + 1, 1, tointcheck(gov_id))
