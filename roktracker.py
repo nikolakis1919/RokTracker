@@ -16,7 +16,7 @@ import xlwt
 import keyboard
 import random
 
-version = "RokTracker-v10.0"
+version = "RokTracker-v10.1"
 pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
 
 today = date.today()
@@ -252,7 +252,7 @@ def main_loop(device, sheet1):
 
             k = min(i, 4)
             device.shell(f'input tap 690 {Y[k]}')
-            randomize_time(1.3)
+            randomize_time(1.5)
 
             # Open governor and ensure the tab is open
             for _ in range(5):
@@ -262,7 +262,7 @@ def main_loop(device, sheet1):
                     break
                 device.shell(f'input swipe 690 605 690 540')
                 device.shell(f'input tap 690 {Y[k]}')
-                randomize_time(1.2)
+                randomize_time(1.4)
             #copy nickname
             device.shell(f'input tap 654 228')
             gov_id_image = preprocess_image2('check_more_info.png', (720, 176, 200, 34))
@@ -272,11 +272,11 @@ def main_loop(device, sheet1):
             gov_name = tk.Tk().clipboard_get()
             #read kvk stats
             device.shell(f'input tap 1226 486')
-            gov_killpoints_image = preprocess_image2('check_more_info.png', (1120, 320, 244, 40))
+            gov_killpoints_image = preprocess_image2('check_more_info.png', (1120, 320, 280, 40))
             gov_killpoints = read_ocr_from_image(gov_killpoints_image, "-c tessedit_char_whitelist=0123456789")
             gov_power_image = preprocess_image2('check_more_info.png', (856, 320, 240, 40))
             gov_power = read_ocr_from_image(gov_power_image, "--psm 6 -c tessedit_char_whitelist=0123456789")
-            randomize_time(0.3)
+            randomize_time(0.5)
             capture_image(device, 'kvk_stats.png')
             gov_kills_high_image = preprocess_image('kvk_stats.png', (1000, 380, 180, 50))
             gov_kills_high = read_ocr_from_image(gov_kills_high_image, "--psm 6 -c tessedit_char_whitelist=0123456789")
@@ -288,13 +288,13 @@ def main_loop(device, sheet1):
             gov_deads_high = read_ocr_from_image(gov_deads_high_image, "-c tessedit_char_whitelist=0123456789")
 
             for _ in range(2):
-                randomize_time(0.6)
+                randomize_time(0.7)
                 device.shell(f'input tap 1174 304')
                 
 
             gov_sevs_high_image = preprocess_image('kvk_stats.png', (1020, 510 , 200, 35))
             gov_sevs_high = read_ocr_from_image(gov_sevs_high_image, "-c tessedit_char_whitelist=0123456789")
-            randomize_time(0.2)
+            randomize_time(0.7)
             capture_image(device, 'kills_tier.png')
             device.shell(f'input tap 226 724')
             
@@ -302,12 +302,12 @@ def main_loop(device, sheet1):
             for y in range(420, 620, 45):
                 kills_tiers_image = preprocess_image('kills_tier.png', (916, y, 215, 26))
                 kills_tiers.append(read_ocr_from_image(kills_tiers_image, "--psm 6 -c tessedit_char_whitelist=0123456789"))
-            randomize_time(0.3)
+            randomize_time(0.6)
             capture_image(device, 'more_info.png')
-            gov_dead_image = preprocess_image3('more_info.png', (1130, 443, 183, 40))
+            gov_dead_image = preprocess_image3('more_info.png', (1050, 443, 263, 40))
             gov_dead = read_ocr_from_image(gov_dead_image, "--psm 6 -c tessedit_char_whitelist=0123456789")
 
-            gov_rss_assistance_image = preprocess_image3('more_info.png', (1130, 668, 183, 40))
+            gov_rss_assistance_image = preprocess_image3('more_info.png', (1050, 690, 263, 40))
             gov_rss_assistance = read_ocr_from_image(gov_rss_assistance_image, "--psm 6 -c tessedit_char_whitelist=0123456789")
 
             device.shell(f'input tap 1396 58') #close more info
@@ -319,7 +319,7 @@ def main_loop(device, sheet1):
             
             # Update progress bar
             print_progress_bar(i + 1 - j, search_range)
-            randomize_time(0.3)
+            randomize_time(0.5)
             
             device.shell(f'input tap 1453 88') #close governor info
             # Write data to Excel
