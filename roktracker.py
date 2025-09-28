@@ -16,7 +16,7 @@ import xlwt
 import keyboard
 import random
 
-version = "RokTracker-v10.1"
+version = "RokTracker-v10.2"
 pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
 
 today = date.today()
@@ -257,7 +257,7 @@ def main_loop(device, sheet1):
             # Open governor and ensure the tab is open
             for _ in range(5):
                 capture_image(device, 'check_more_info.png')
-                check_more_info_image = preprocess_image2('check_more_info.png', (170, 775, 116, 29))
+                check_more_info_image = preprocess_image2('check_more_info.png', (180, 782, 113, 33))
                 if 'MoreInfo' in read_ocr_from_image(check_more_info_image, "-c tessedit_char_whitelist=MoreInfo"):
                     break
                 device.shell(f'input swipe 690 605 690 540')
@@ -272,27 +272,27 @@ def main_loop(device, sheet1):
             gov_name = tk.Tk().clipboard_get()
             #read kvk stats
             device.shell(f'input tap 1226 486')
-            gov_killpoints_image = preprocess_image2('check_more_info.png', (1120, 320, 280, 40))
+            gov_killpoints_image = preprocess_image2('check_more_info.png', (1120, 313, 280, 40))
             gov_killpoints = read_ocr_from_image(gov_killpoints_image, "-c tessedit_char_whitelist=0123456789")
             gov_power_image = preprocess_image2('check_more_info.png', (856, 320, 240, 40))
             gov_power = read_ocr_from_image(gov_power_image, "--psm 6 -c tessedit_char_whitelist=0123456789")
             randomize_time(0.5)
             capture_image(device, 'kvk_stats.png')
-            gov_kills_high_image = preprocess_image('kvk_stats.png', (1000, 380, 180, 50))
+            gov_kills_high_image = preprocess_image('kvk_stats.png', (1010, 400, 180, 50))
             gov_kills_high = read_ocr_from_image(gov_kills_high_image, "--psm 6 -c tessedit_char_whitelist=0123456789")
             
             alliance_tag_image = preprocess_image('check_more_info.png', (580, 320, 250, 40))
             alliance_tag = read_ocr_from_image(alliance_tag_image)
 
-            gov_deads_high_image = preprocess_image('kvk_stats.png', (1020, 460 , 200, 35))
+            gov_deads_high_image = preprocess_image('kvk_stats.png', (1020, 480 , 200, 35))
             gov_deads_high = read_ocr_from_image(gov_deads_high_image, "-c tessedit_char_whitelist=0123456789")
 
-            for _ in range(2):
-                randomize_time(0.7)
-                device.shell(f'input tap 1174 304')
+           
+            randomize_time(0.7)
+            device.shell(f'input tap 1174 304')
                 
 
-            gov_sevs_high_image = preprocess_image('kvk_stats.png', (1020, 510 , 200, 35))
+            gov_sevs_high_image = preprocess_image('kvk_stats.png', (1020, 530 , 200, 35))
             gov_sevs_high = read_ocr_from_image(gov_sevs_high_image, "-c tessedit_char_whitelist=0123456789")
             randomize_time(0.7)
             capture_image(device, 'kills_tier.png')
