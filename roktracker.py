@@ -16,7 +16,7 @@ import xlwt
 import keyboard
 import random
 
-version = "RokTracker-v10.2"
+version = "RokTracker-v11.0"
 pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
 
 today = date.today()
@@ -105,7 +105,7 @@ def setup_excel():
     font.bold = True
     style.font = font
 
-    headers = ['Governor Name', 'Governor ID', 'Power', 'Kill Points', 'Deads', 'Tier 1 Kills', 'Tier 2 Kills', 'Tier 3 Kills', 'Tier 4 Kills', 'Tier 5 Kills', 'Rss Assistance', 'Alliance Helps', 'Alliance','KvK Kills High', 'KvK Deads High', 'KvK Severely Wounds High']
+    headers = ['Governor Name', 'Governor ID', 'Power', 'Kill Points', 'Deads', 'Tier 1 Kills', 'Tier 2 Kills', 'Tier 3 Kills', 'Tier 4 Kills', 'Tier 5 Kills', 'Rss Assistance', 'Alliance Helps', 'Alliance','KvK Kills High', 'KvK Deads High', 'KvK Severely Wounds High','Aclaim','High Aclaim']
     for col, header in enumerate(headers):
         sheet1.write(0, col, header, style)
     return wb, sheet1
@@ -258,49 +258,59 @@ def main_loop(device, sheet1):
             for _ in range(5):
                 capture_image(device, 'check_more_info.png')
                 check_more_info_image = preprocess_image2('check_more_info.png', (180, 782, 113, 33))
+                check_more_info_image2 = preprocess_image2('check_more_info.png', (400, 782, 113, 33))
                 if 'MoreInfo' in read_ocr_from_image(check_more_info_image, "-c tessedit_char_whitelist=MoreInfo"):
+                    break
+                elif 'Alliance' in read_ocr_from_image(check_more_info_image2, "-c tessedit_char_whitelist=Alliance"):
                     break
                 device.shell(f'input swipe 690 605 690 540')
                 device.shell(f'input tap 690 {Y[k]}')
                 randomize_time(1.4)
             #copy nickname
             device.shell(f'input tap 654 228')
-            gov_id_image = preprocess_image2('check_more_info.png', (720, 176, 200, 34))
+            gov_id_image = preprocess_image2('check_more_info.png', (713, 180, 200, 34))
             gov_id = read_ocr_from_image(gov_id_image, "-c tessedit_char_whitelist=0123456789")
 
 
             gov_name = tk.Tk().clipboard_get()
             #read kvk stats
             device.shell(f'input tap 1226 486')
-            gov_killpoints_image = preprocess_image2('check_more_info.png', (1120, 313, 280, 40))
-            gov_killpoints = read_ocr_from_image(gov_killpoints_image, "-c tessedit_char_whitelist=0123456789")
-            gov_power_image = preprocess_image2('check_more_info.png', (856, 320, 240, 40))
+            gov_killpoints_image = preprocess_image2('check_more_info.png', (875, 306, 230, 35))
+            gov_killpoints = read_ocr_from_image(gov_killpoints_image, "-c tessedit_charcc_whitelist=0123456789")
+            gov_power_image = preprocess_image2('check_more_info.png', (1134, 306, 230, 35))
             gov_power = read_ocr_from_image(gov_power_image, "--psm 6 -c tessedit_char_whitelist=0123456789")
             randomize_time(0.5)
             capture_image(device, 'kvk_stats.png')
-            gov_kills_high_image = preprocess_image('kvk_stats.png', (1010, 400, 180, 50))
+            gov_kills_high_image = preprocess_image('kvk_stats.png', (1030, 435, 180, 50))
             gov_kills_high = read_ocr_from_image(gov_kills_high_image, "--psm 6 -c tessedit_char_whitelist=0123456789")
             
-            alliance_tag_image = preprocess_image('check_more_info.png', (580, 320, 250, 40))
+            alliance_tag_image = preprocess_image('check_more_info.png', (574, 300, 266, 40))
             alliance_tag = read_ocr_from_image(alliance_tag_image)
 
-            gov_deads_high_image = preprocess_image('kvk_stats.png', (1020, 480 , 200, 35))
+            gov_deads_high_image = preprocess_image('kvk_stats.png', (1020, 515 , 210, 35))
             gov_deads_high = read_ocr_from_image(gov_deads_high_image, "-c tessedit_char_whitelist=0123456789")
 
            
             randomize_time(0.7)
-            device.shell(f'input tap 1174 304')
+            device.shell(f'input tap 864 284')
                 
 
-            gov_sevs_high_image = preprocess_image('kvk_stats.png', (1020, 530 , 200, 35))
+            gov_sevs_high_image = preprocess_image('kvk_stats.png', (1020, 565 , 210, 35))
             gov_sevs_high = read_ocr_from_image(gov_sevs_high_image, "-c tessedit_char_whitelist=0123456789")
-            randomize_time(0.7)
+
+            gov_aclaim_image = preprocess_image('check_more_info.png', (875, 380, 266, 40))
+            gov_aclaim = read_ocr_from_image(gov_aclaim_image, "-c tessedit_char_whitelist=0123456789")
+
+            gov_high_aclaim_image = preprocess_image('check_more_info.png', (1134, 380, 266, 40))
+            gov_high_aclaim = read_ocr_from_image(gov_high_aclaim_image, "-c tessedit_char_whitelist=0123456789")
+            
+            randomize_time(0.5)
             capture_image(device, 'kills_tier.png')
             device.shell(f'input tap 226 724')
             
             kills_tiers = []
-            for y in range(420, 620, 45):
-                kills_tiers_image = preprocess_image('kills_tier.png', (916, y, 215, 26))
+            for y in range(405, 605, 45):
+                kills_tiers_image = preprocess_image('kills_tier.png', (916, y, 250, 26))
                 kills_tiers.append(read_ocr_from_image(kills_tiers_image, "--psm 6 -c tessedit_char_whitelist=0123456789"))
             randomize_time(0.6)
             capture_image(device, 'more_info.png')
@@ -315,7 +325,7 @@ def main_loop(device, sheet1):
             gov_helps_image = preprocess_image3('more_info.png', (1148, 732, 164, 44))
             gov_alliance_helps = read_ocr_from_image(gov_helps_image, "--psm 6 -c tessedit_char_whitelist=0123456789")
 
-            print(f'Governor ID: {gov_id}Governor Name: {gov_name}\nGovernor Power: {tointprint(gov_power)}\nGovernor Killpoints: {tointprint(gov_killpoints)}\nTier 1 kills: {tointprint(kills_tiers[0])}\nTier 2 kills: {tointprint(kills_tiers[1])}\nTier 3 kills: {tointprint(kills_tiers[2])}\nTier 4 kills: {tointprint(kills_tiers[3])}\nTier 5 kills: {tointprint(kills_tiers[4])}\nGovernor Deads: {tointprint(gov_dead)}\nGovernor RSS Assistance: {tointprint(gov_rss_assistance)}\nGovernor Alliance Helps: {tointprint(gov_alliance_helps)}\nGovernor Alliance: {alliance_tag}Governor KvK High Kill: {tointprint(gov_kills_high)}\nGovernor KvK High Deads:{tointprint(gov_deads_high)}\nGovernor KvK High Severely Wounded:{tointprint(gov_sevs_high)}')
+            print(f'Governor ID: {gov_id}Governor Name: {gov_name}\nGovernor Power: {tointprint(gov_power)}\nGovernor Killpoints: {tointprint(gov_killpoints)}Tier 1 kills: {tointprint(kills_tiers[0])}\nTier 2 kills: {tointprint(kills_tiers[1])}\nTier 3 kills: {tointprint(kills_tiers[2])}\nTier 4 kills: {tointprint(kills_tiers[3])}\nTier 5 kills: {tointprint(kills_tiers[4])}\nGovernor Deads: {tointprint(gov_dead)}\nGovernor RSS Assistance: {tointprint(gov_rss_assistance)}\nGovernor Alliance Helps: {tointprint(gov_alliance_helps)}\nGovernor Alliance: {alliance_tag}Governor KvK High Kill: {tointprint(gov_kills_high)}\nGovernor KvK High Deads:{tointprint(gov_deads_high)}\nGovernor KvK High Severely Wounded:{tointprint(gov_sevs_high)}\nAclaim: {tointprint(gov_aclaim)}\nHigh Aclaim: {tointprint(gov_high_aclaim)}\n')
             
             # Update progress bar
             print_progress_bar(i + 1 - j, search_range)
@@ -339,6 +349,8 @@ def main_loop(device, sheet1):
             sheet1.write(i - j + 1, 13, tointcheck(gov_kills_high))
             sheet1.write(i - j + 1, 14, tointcheck(gov_deads_high))
             sheet1.write(i - j + 1, 15, tointcheck(gov_sevs_high))
+            sheet1.write(i - j + 1, 16, tointcheck(gov_aclaim))
+            sheet1.write(i - j + 1, 17, tointcheck(gov_high_aclaim))
 
             #ETA
             elapsed_time = time.time() - start_time
